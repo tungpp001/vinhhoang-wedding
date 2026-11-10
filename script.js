@@ -166,33 +166,12 @@
 
   function initScrollAnimations() {
     const transitionElements = document.querySelectorAll('[data-transition-key]');
-    if (!('IntersectionObserver' in window)) {
-      transitionElements.forEach((el) => {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      });
-      return;
-    }
-
-    transitionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const el = entry.target;
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-            transitionObserver.unobserve(el);
-          }
-        });
-      },
-      {
-        root: scrollRoot || null,
-        threshold: 0.08,
-        rootMargin: '0px 0px -20px 0px'
-      }
-    );
-
-    transitionElements.forEach((el) => transitionObserver.observe(el));
+    // Always make all elements visible immediately so mobile WebViews (Zalo, iOS Safari)
+    // never leave photos or text stuck at opacity:0 inside scaled containers
+    transitionElements.forEach((el) => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+    });
   }
 
   initScrollAnimations();
@@ -553,7 +532,7 @@
   });
 
   function copyShareLink() {
-    const url = window.location.href.split('?')[0] + '?v=vh';
+    const url = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/thiep.html');
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => showToast('Đã sao chép link thiệp! 🔗'));
     } else {
@@ -1222,6 +1201,11 @@
         if (!resolvedImg) continue;
         const container = document.querySelector(`[data-node-id="${nodeId}"]`);
         if (container) {
+          const transEl = container.querySelector('[data-transition-key]');
+          if (transEl) {
+            transEl.style.opacity = '1';
+            transEl.style.transform = 'none';
+          }
           const bgWrap = container.querySelector('.photo-bg-wrap');
           if (bgWrap) {
             bgWrap.style.backgroundImage = `url("${resolvedImg}")`;
@@ -1271,26 +1255,30 @@
   // Load config on startup:
   // 1) Instant paint from localStorage (if edited locally in browser)
   // 2) Fetch ./site-config.json (works on GitHub Pages & static hosts!) or /api/config (local Node server)
+  // Clear legacy localStorage key that could hold broken '/uploads/...' paths on mobile browsers
   try {
-    const localCfg = localStorage.getItem('cl_huy11_custom_config');
-    if (localCfg) {
-      const cleanedCfg = sanitizeLegacyNames(localCfg);
-      if (cleanedCfg !== localCfg) localStorage.setItem('cl_huy11_custom_config', cleanedCfg);
-      applyCustomConfig(JSON.parse(cleanedCfg));
+    localStorage.removeItem('cl_huy11_custom_config');
+    if (isLocalHost || isPreviewIframe) {
+      const localCfg = localStorage.getItem('cl_vinhhoang_config_v4');
+      if (localCfg) {
+        applyCustomConfig(JSON.parse(sanitizeLegacyNames(localCfg)));
+      }
     }
   } catch (e) {}
 
   async function loadRemoteConfig() {
     for (const url of [`./site-config.json?t=${Date.now()}`, '/api/config']) {
       try {
-        const res = await fetch(url);
+        const res = await fetch(url, { cache: 'no-store' });
         if (res.ok) {
           const cfg = await res.json();
           if (cfg && Object.keys(cfg).length > 0) {
             applyCustomConfig(cfg);
-            try {
-              localStorage.setItem('cl_huy11_custom_config', JSON.stringify(cfg));
-            } catch (e) {}
+            if (isLocalHost || isPreviewIframe) {
+              try {
+                localStorage.setItem('cl_vinhhoang_config_v4', JSON.stringify(cfg));
+              } catch (e) {}
+            }
             return;
           }
         }

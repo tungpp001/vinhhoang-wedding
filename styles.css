@@ -158,6 +158,7 @@
   .feedLayout_feed__jIIvL {
     display: block !important;
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
   }
   .feedLayout_side__cEJ5f,
@@ -169,15 +170,18 @@
   .feedLayout_stage__zQjhY {
     padding: 0 !important;
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
   }
   .feedLayout_cardRow__36Grw {
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
     gap: 0 !important;
   }
   .feedLayout_card__Nx6Wg {
     width: 100vw !important;
+    height: 100vh !important;
     height: 100dvh !important;
     border-radius: 0 !important;
     box-shadow: none !important;

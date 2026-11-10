@@ -85,6 +85,7 @@ const server = http.createServer(async (req, res) => {
         html = html.replace(/<meta property="og:image:secure_url" content="[^"]*"\s*\/>/, `<meta property="og:image:secure_url" content="${absImg}" />`);
         html = html.replace(/<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${absImg}" />`);
         fs.writeFileSync(indexFile, html, 'utf8');
+        fs.writeFileSync(path.join(ROOT_DIR, 'thiep.html'), html, 'utf8');
       }
 
       exec('git add -A && git commit -m "Update wedding config from Admin Studio" && git push origin main', { cwd: ROOT_DIR }, () => {});
