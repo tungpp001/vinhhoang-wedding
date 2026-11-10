@@ -246,8 +246,9 @@
   }
 
   if (scrollRoot) {
-    ['wheel', 'touchstart', 'touchmove', 'mousedown'].forEach((evt) => {
-      scrollRoot.addEventListener(evt, () => pauseAutoScrollTemporarily(5000), { passive: true });
+    ['wheel', 'touchstart', 'touchmove', 'touchend', 'pointerdown', 'mousedown'].forEach((evt) => {
+      window.addEventListener(evt, () => pauseAutoScrollTemporarily(8000), { passive: true });
+      scrollRoot.addEventListener(evt, () => pauseAutoScrollTemporarily(8000), { passive: true });
     });
 
     function autoScrollStep() {
@@ -756,9 +757,20 @@
   const toolbarToggleBtn = document.querySelector('.toolbar-toggle-button');
   const appViewIndex = document.getElementById('app-view-index');
   if (toolbarToggleBtn && appViewIndex) {
-    toolbarToggleBtn.addEventListener('click', () => {
-      appViewIndex.classList.toggle('hide-toolbar');
-    });
+    let lastToggleTime = 0;
+    const handleToolbarToggle = (e) => {
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastToggleTime < 250) return;
+      lastToggleTime = now;
+      const isHidden = appViewIndex.classList.toggle('hide-toolbar');
+      showToast(isHidden ? 'Đã ẩn bình luận & thanh công cụ' : 'Đã bật bình luận');
+    };
+    toolbarToggleBtn.addEventListener('click', handleToolbarToggle);
+    toolbarToggleBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      handleToolbarToggle(e);
+    }, { passive: false });
   }
 
   // --- 10. HỘP QUÀ MỪNG (WOBBLING HEART BOX) & COPY STK ---
@@ -782,28 +794,124 @@
     }
   });
 
-  // --- 11. PHOTO LIGHTBOX (Delegated so dynamic album photos also open in lightbox) ---
+  // --- 11. PHOTO LIGHTBOX (Swipeable Gallery for Wedding Photos) ---
   const lightbox = document.getElementById('photo-lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxClose = document.getElementById('lightbox-close');
+  const lightboxPrev = document.getElementById('lightbox-prev');
+  const lightboxNext = document.getElementById('lightbox-next');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+
+  let galleryUrls = [];
+  let currentGalleryIndex = 0;
+
+  function collectGalleryUrls() {
+    const wraps = Array.from(document.querySelectorAll('.photo-component .photo-bg-wrap'));
+    const entries = [];
+    wraps.forEach((w) => {
+      const bg = w.style.backgroundImage;
+      const match = bg && bg.match(/url\(["']?([^"')]+)["']?\)/);
+      if (match && match[1]) {
+        const url = match[1];
+        // Ignore decorative transparent PNG assets
+        if (url.includes('assets/')) return;
+        const comp = w.closest('.photo-component');
+        const top = comp ? parseFloat(comp.style.top) || 0 : 0;
+        const left = comp ? parseFloat(comp.style.left) || 0 : 0;
+        entries.push({ url, top, left });
+      }
+    });
+    entries.sort((a, b) => (Math.abs(a.top - b.top) > 15 ? a.top - b.top : a.left - b.left));
+    const unique = [];
+    entries.forEach((item) => {
+      if (!unique.includes(item.url)) unique.push(item.url);
+    });
+    return unique.length ? unique : entries.map((e) => e.url);
+  }
+
+  function showLightboxImage(idx) {
+    if (!galleryUrls.length || !lightboxImg) return;
+    currentGalleryIndex = (idx + galleryUrls.length) % galleryUrls.length;
+    lightboxImg.style.opacity = '0.4';
+    lightboxImg.src = galleryUrls[currentGalleryIndex];
+    requestAnimationFrame(() => {
+      lightboxImg.style.opacity = '1';
+    });
+    if (lightboxCounter) {
+      lightboxCounter.textContent = `${currentGalleryIndex + 1} / ${galleryUrls.length}`;
+    }
+  }
+
+  let tapStartX = 0;
+  let tapStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length === 1) {
+      tapStartX = e.touches[0].clientX;
+      tapStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
 
   document.addEventListener('click', (e) => {
     const wrap = e.target.closest('.photo-component .photo-bg-wrap');
     if (wrap) {
       const bg = wrap.style.backgroundImage;
       const match = bg && bg.match(/url\(["']?([^"')]+)["']?\)/);
-      if (match && match[1] && lightbox && lightboxImg) {
-        lightboxImg.src = match[1];
+      if (match && match[1] && !match[1].includes('assets/') && lightbox && lightboxImg) {
+        galleryUrls = collectGalleryUrls();
+        const foundIdx = galleryUrls.indexOf(match[1]);
+        showLightboxImage(foundIdx >= 0 ? foundIdx : 0);
         lightbox.classList.add('open');
       }
     }
   });
 
   if (lightbox) {
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showLightboxImage(currentGalleryIndex - 1);
+      });
+    }
+    if (lightboxNext) {
+      lightboxNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showLightboxImage(currentGalleryIndex + 1);
+      });
+    }
+
+    let lbTouchStartX = 0;
+    let lbTouchStartY = 0;
+    lightbox.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches.length === 1) {
+        lbTouchStartX = e.touches[0].clientX;
+        lbTouchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+      if (!e.changedTouches || !e.changedTouches.length) return;
+      const dx = e.changedTouches[0].clientX - lbTouchStartX;
+      const dy = e.changedTouches[0].clientY - lbTouchStartY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
+        if (dx < 0) {
+          showLightboxImage(currentGalleryIndex + 1);
+        } else {
+          showLightboxImage(currentGalleryIndex - 1);
+        }
+      }
+    }, { passive: true });
+
     lightbox.addEventListener('click', (e) => {
       if (e.target === lightbox || e.target === lightboxClose) {
         lightbox.classList.remove('open');
       }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') lightbox.classList.remove('open');
+      if (e.key === 'ArrowRight') showLightboxImage(currentGalleryIndex + 1);
+      if (e.key === 'ArrowLeft') showLightboxImage(currentGalleryIndex - 1);
     });
   }
 

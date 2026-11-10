@@ -206,14 +206,57 @@
 }
 .feedLayout_feed__jIIvL.feedLayout_feed__jIIvL .toolbar-toggle-button {
   display: flex !important;
+  z-index: 10005 !important;
+  width: 42px !important;
+  height: 68px !important;
+  bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+  right: 10px !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
-#app-view-index.hide-toolbar #cinelove-toolbar {
+#app-view-index.hide-toolbar #cinelove-toolbar,
+#app-view-index.hide-toolbar #blessing-box,
+#app-view-index.hide-toolbar .received-gifts-wrapper {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+  height: 40px !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .toolbar-toggle-pill {
+  height: 40px !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .thumbnail {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateX(-50%) scale(0.4) !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .icon-svg {
+  transform: translateX(-50%) rotate(45deg) !important;
+}
+
+/* Smooth native touch scrolling & prevent decorative background overlays from blocking taps/swipes */
+[data-autoscroll-root] {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: contain;
+}
+[data-node-id="hwy_PnNdsi"],
+[data-node-id="I8KC0g3PaN"],
+[data-node-id="9-4s3IqnyI"],
+[data-node-id="1BREqxZV_t"],
+[data-node-id="lV6r7VALtk"] {
+  pointer-events: none !important;
 }
 
 /* Interactive cursor on clickable photos & QR box */
 .photo-component .photo-bg-wrap {
   cursor: zoom-in;
+  touch-action: pan-y !important;
 }
 [data-node-id="SVdCdxsNxj"] {
   cursor: pointer !important;
@@ -435,18 +478,22 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* Lightbox */
+/* Lightbox (Swipeable Gallery) */
 .cl-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.92);
   z-index: 10000000;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .cl-lightbox.open {
   opacity: 1;
@@ -454,23 +501,75 @@
 }
 .cl-lightbox img {
   max-width: 92vw;
-  max-height: 90vh;
+  max-height: 82vh;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transition: transform 0.22s ease, opacity 0.18s ease;
 }
 .cl-lightbox-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  right: 16px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   color: #fff;
   border: none;
   font-size: 22px;
   cursor: pointer;
   display: grid;
   place-items: center;
+  z-index: 3;
+}
+.cl-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  transition: background 0.15s;
+}
+.cl-lightbox-nav:hover, .cl-lightbox-nav:active {
+  background: rgba(255, 255, 255, 0.35);
+}
+.cl-lightbox-prev {
+  left: 10px;
+}
+.cl-lightbox-next {
+  right: 10px;
+}
+.cl-lightbox-counter {
+  position: absolute;
+  top: calc(22px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.45);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 3;
+}
+.cl-lightbox-hint {
+  position: absolute;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  pointer-events: none;
+  white-space: nowrap;
 }
