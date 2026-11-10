@@ -553,7 +553,7 @@
   });
 
   function copyShareLink() {
-    const url = window.location.href.split('?')[0];
+    const url = window.location.href.split('?')[0] + '?v=vh';
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(() => showToast('Đã sao chép link thiệp! 🔗'));
     } else {

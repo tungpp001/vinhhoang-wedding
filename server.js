@@ -69,6 +69,24 @@ const server = http.createServer(async (req, res) => {
       const normalizedBody = body.replace(/"\/uploads\//g, '"uploads/');
       const parsed = JSON.parse(normalizedBody);
       fs.writeFileSync(CONFIG_FILE, JSON.stringify(parsed, null, 2), 'utf8');
+
+      // Sync OpenGraph meta tags in index.html for Zalo/Facebook link previews
+      const indexFile = path.join(ROOT_DIR, 'index.html');
+      if (fs.existsSync(indexFile) && parsed.meta) {
+        let html = fs.readFileSync(indexFile, 'utf8');
+        const pageTitle = parsed.meta.pageTitle || 'Vĩnh Hoàng💕Xoan Xoan | Thiệp Cưới Online';
+        const coverThumb = parsed.meta.coverThumb || 'uploads/1794324127512-x21ut2.jpg';
+        const absImg = coverThumb.startsWith('http')
+          ? coverThumb
+          : `https://tungpp001.github.io/vinhhoang-wedding/${coverThumb.replace(/^\//, '')}`;
+        html = html.replace(/<title>[^<]*<\/title>/, `<title>${pageTitle}</title>`);
+        html = html.replace(/<meta property="og:title" content="[^"]*"\s*\/>/, `<meta property="og:title" content="${pageTitle}" />`);
+        html = html.replace(/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${absImg}" />`);
+        html = html.replace(/<meta property="og:image:secure_url" content="[^"]*"\s*\/>/, `<meta property="og:image:secure_url" content="${absImg}" />`);
+        html = html.replace(/<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${absImg}" />`);
+        fs.writeFileSync(indexFile, html, 'utf8');
+      }
+
       exec('git add -A && git commit -m "Update wedding config from Admin Studio" && git push origin main', { cwd: ROOT_DIR }, () => {});
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify({ ok: true }));
