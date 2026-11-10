@@ -489,11 +489,11 @@
             <div class="grid-2">
               <div class="form-group">
                 <label class="form-label">Họ tên Bố Chú Rể</label>
-                <input type="text" class="form-input" id="groom-father" placeholder="VD: Ông : Nguyễn Đức Hữ" />
+                <input type="text" class="form-input" id="groom-father" placeholder="VD: Ông : Nguyễn Vĩnh Sơn" />
               </div>
               <div class="form-group">
                 <label class="form-label">Họ tên Mẹ Chú Rể</label>
-                <input type="text" class="form-input" id="groom-mother" placeholder="VD: Bà : Trịnh Thị Hoàn" />
+                <input type="text" class="form-input" id="groom-mother" placeholder="VD: Bà : Nguyễn Thị Sơn" />
               </div>
             </div>
 
@@ -534,11 +534,11 @@
             <div class="grid-2">
               <div class="form-group">
                 <label class="form-label">Họ tên Bố Cô Dâu</label>
-                <input type="text" class="form-input" id="bride-father" placeholder="VD: Ông : Nguyễn Đức Toản" />
+                <input type="text" class="form-input" id="bride-father" placeholder="VD: Ông : Trần Văn Hướng" />
               </div>
               <div class="form-group">
                 <label class="form-label">Họ tên Mẹ Cô Dâu</label>
-                <input type="text" class="form-input" id="bride-mother" placeholder="VD: Bà : Trần Thị Nở" />
+                <input type="text" class="form-input" id="bride-mother" placeholder="VD: Bà : Trần Thị Toản" />
               </div>
             </div>
 
@@ -1611,7 +1611,7 @@
                 </div>
                 <div class="grid-2">
                   <div class="form-group">
-                    <label class="form-label">Tiêu đề / Vai trò (VD: Chú Rể: Đức Huy)</label>
+                    <label class="form-label">Tiêu đề / Vai trò (VD: Chú Rể: Vĩnh Hoàng)</label>
                     <input type="text" class="form-input" data-bank-field="${idx}:title" value="${escapeHtml(acc.title)}" />
                   </div>
                   <div class="form-group">
@@ -1629,7 +1629,7 @@
                   </div>
                   <div class="form-group">
                     <label class="form-label">Tên chủ tài khoản (Không dấu)</label>
-                    <input type="text" class="form-input" data-bank-field="${idx}:accountHolder" value="${escapeHtml(acc.accountHolder)}" placeholder="VD: NGUYEN DUC HUY" />
+                    <input type="text" class="form-input" data-bank-field="${idx}:accountHolder" value="${escapeHtml(acc.accountHolder)}" placeholder="VD: NGUYEN VINH HOANG" />
                   </div>
                   <div class="form-group">
                     <label class="form-label">Chi nhánh / Ghi chú</label>
@@ -2222,7 +2222,13 @@
       function getWishesList() {
         try {
           const s = localStorage.getItem('cl_huy11_wishes');
-          if (s) return JSON.parse(s);
+          if (s) {
+            const cleaned = s
+              .replace(/Đức\s*Huy|Đức\s*Huy/gi, 'Vĩnh Hoàng')
+              .replace(/Nguyễn\s*Hường|Nguyễn\s*Hường/gi, 'Xoan Xoan');
+            if (cleaned !== s) localStorage.setItem('cl_huy11_wishes', cleaned);
+            return JSON.parse(cleaned);
+          }
         } catch (e) {}
         return [
           { senderName: 'Minh Tuấn & Ngọc Lan', content: 'Chúc Vĩnh Hoàng và Xoan Xoan trăm năm hạnh phúc, mãi mãi yêu thương nhau như ngày đầu nhé! 💕', createdAt: new Date().toISOString() },

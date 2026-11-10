@@ -378,10 +378,23 @@
 
   // --- 7. WISHES / BLESSINGS & RIGHT PANEL TABS ---
   let wishes = [];
+  function sanitizeLegacyNames(str) {
+    if (!str || typeof str !== 'string') return str;
+    return str
+      .replace(/Đức\s*Huy|Đức\s*Huy/gi, 'Vĩnh Hoàng')
+      .replace(/Nguyễn\s*Hường|Nguyễn\s*Hường/gi, 'Xoan Xoan');
+  }
+
   function loadWishesFromStorage() {
     try {
       const saved = localStorage.getItem('cl_huy11_wishes');
-      wishes = saved ? JSON.parse(saved) : [...CONFIG.defaultWishes];
+      if (saved) {
+        const cleaned = sanitizeLegacyNames(saved);
+        if (cleaned !== saved) localStorage.setItem('cl_huy11_wishes', cleaned);
+        wishes = JSON.parse(cleaned);
+      } else {
+        wishes = [...CONFIG.defaultWishes];
+      }
     } catch (e) {
       wishes = [...CONFIG.defaultWishes];
     }
@@ -1261,7 +1274,9 @@
   try {
     const localCfg = localStorage.getItem('cl_huy11_custom_config');
     if (localCfg) {
-      applyCustomConfig(JSON.parse(localCfg));
+      const cleanedCfg = sanitizeLegacyNames(localCfg);
+      if (cleanedCfg !== localCfg) localStorage.setItem('cl_huy11_custom_config', cleanedCfg);
+      applyCustomConfig(JSON.parse(cleanedCfg));
     }
   } catch (e) {}
 
