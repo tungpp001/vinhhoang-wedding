@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quản Trị Thiệp Cưới | Vĩnh Hoàng 💕 Xoan Xoan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <style>
+    :root {
+      --bg: #f5f6fa;
+      --card: #ffffff;
+      --ink: #161823;
+      --muted: #65676b;
+      --line: #e5e7eb;
+      --brand: #e8436a;
+      --brand-hover: #d6335a;
+      --brand-soft: #fff1f4;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .topbar {
+      height: 64px;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .topbar-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 38px;
+      padding: 0 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { background: #f3f4f6; }
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 4px 12px rgba(232, 67, 106, 0.25);
+    }
+    .btn-primary:hover { background: var(--brand-hover); }
+    .btn-soft {
+      background: var(--brand-soft);
+      color: var(--brand);
+      border-color: rgba(232, 67, 106, 0.25);
+    }
+    .btn-soft:hover { background: #ffe0e7; }
+    .btn-sm { height: 32px; padding: 0 11px; font-size: 12px; border-radius: 8px; }
+    .btn-danger { color: #dc2626; border-color: #fecaca; background: #fef2f2; }
+    .btn-danger:hover { background: #fee2e2; }
+
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 265px minmax(0, 1fr) 410px;
+      min-height: 0;
+    }
+    .sidebar {
+      background: var(--card);
+      border-right: 1px solid var(--line);
+      padding: 16px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 14px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13.5px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .nav-item:hover { background: #f3f4f6; color: var(--ink); }
+    .nav-item.active {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+    .nav-icon { font-size: 17px; width: 22px; text-align: center; }
+
+    .editor-pane {
+      overflow-y: auto;
+      padding: 26px 30px 60px;
+    }
+    .editor-container {
+      max-width: 740px;
+      margin: 0 auto;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    .section-title {
+      margin: 0 0 6px;
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-desc {
+      margin: 0 0 18px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 9px;
+      font-size: 13.5px;
+      font-family: inherit;
+      color: var(--ink);
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(232, 67, 106, 0.12);
+    }
+    .form-textarea { min-height: 70px; resize: vertical; line-height: 1.45; }
+    .form-hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+
+    .photo-field {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fafafa;
+      margin-bottom: 12px;
+    }
+    .photo-thumb {
+      width: 72px;
+      height: 92px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #e5e7eb;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .photo-controls { flex: 1; min-width: 0; }
+    .photo-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .file-input-hidden { display: none; }
+
+    /* Album Grid Cards */
+    .album-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .album-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fafafa;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      position: relative;
+    }
+    .album-card img {
+      width: 76px;
+      height: 108px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #e5e7eb;
+      flex-shrink: 0;
+    }
+    .album-card-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .album-card-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Bank Account Card */
+    .bank-card {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .bank-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* Right Live Preview Pane */
+    .preview-pane {
+      background: #eef0f4;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      position: relative;
+    }
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 348px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .phone-mockup {
+      width: 356px;
+      height: calc(100vh - 125px);
+      max-height: 760px;
+      background: #fff;
+      border-radius: 34px;
+      border: 7px solid #1f2937;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.16);
+      overflow: hidden;
+      position: relative;
+    }
+    .phone-mockup iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .data-table th, .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+    }
+    .data-table th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #4b5563;
+    }
+    .badge-yes {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .badge-no {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .stat-box {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid var(--line);
+    }
+    .stat-val { font-size: 22px; font-weight: 700; color: var(--brand); }
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .admin-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #161823;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+    .admin-toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1150px) {
+      .workspace { grid-template-columns: 220px minmax(0, 1fr); }
+      .preview-pane { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="index.html" class="topbar-brand">
+        <img src="assets/logo-symbol.svg" alt="Logo" width="28" height="28" />
+        <span>Quản Trị Thiệp Cưới</span>
+      </a>
+      <span class="topbar-badge">Live Studio</span>
+    </div>
+    <div class="topbar-actions">
+      <button type="button" class="btn" id="btn-import-json" title="Nhập file cấu hình site-config.json">📂 Nhập JSON</button>
+      <button type="button" class="btn" id="btn-export-json" title="Tải file cấu hình JSON về máy">📥 Xuất JSON</button>
+      <button type="button" class="btn" id="btn-reset-default" title="Khôi phục về nội dung gốc">🔄 Mặc định</button>
+      <a href="index.html" target="_blank" class="btn">🌐 Mở xem thiệp</a>
+      <button type="button" class="btn btn-primary" id="btn-save-all">💾 Lưu thay đổi</button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <div class="workspace">
+    <!-- Left Navigation -->
+    <aside class="sidebar">
+      <button type="button" class="nav-item active" data-tab="tab-families" data-scroll="820">
+        <span class="nav-icon">🤵👰</span> Cô Dâu Chú Rể & Gia Đình
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-gallery" data-scroll="3620">
+        <span class="nav-icon">📸</span> Album Ảnh Cưới (+Thêm ảnh)
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-qr" data-scroll="4620">
+        <span class="nav-icon">🏦</span> STK Ngân Hàng & Mã QR
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-hero" data-scroll="0">
+        <span class="nav-icon">🌸</span> Trang Bìa & Nhạc Nền
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-ceremony" data-scroll="1380">
+        <span class="nav-icon">💌</span> Thư Mời & Địa Điểm Tiệc
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-calendar" data-scroll="3020">
+        <span class="nav-icon">📅</span> Lịch Tháng & Đếm Ngược
+      </button>
+      <button type="button" class="nav-item" data-tab="tab-guests" data-scroll="5450">
+        <span class="nav-icon">📋</span> Khách Mời & Lời Chúc
+      </button>
+    </aside>
+
+    <!-- Center Form Editor -->
+    <main class="editor-pane">
+      <div class="editor-container">
+
+        <!-- TAB 1: BRIDE, GROOM & BOTH FAMILIES -->
+        <div class="tab-panel active" id="tab-families">
+          <!-- Smart Sync Couple Names & Top Cover Photo -->
+          <div class="section-card" style="border-color:rgba(232,67,106,0.35);background:linear-gradient(180deg,#fff9fa 0%,#ffffff 100%)">
+            <h2 class="section-title">💑 Tên Chú Rể, Cô Dâu & Ảnh Bìa Mở Đầu Đầu Trang</h2>
+            <p class="section-desc">Thay tên Chú Rể, Cô Dâu và bức ảnh lớn ở ngay đầu thiệp cưới (Save The Date).</p>
+            <div class="grid-2" style="margin-bottom:14px">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">🤵 Tên Chú Rể</label>
+                <input type="text" class="form-input" id="quick-groom-name" data-node-text="WfJzkvPoSj" placeholder="VD: Vĩnh Hoàng" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">👰 Tên Cô Dâu</label>
+                <input type="text" class="form-input" id="quick-bride-name" data-node-text="mRu4SjmOw3" placeholder="VD: Xoan Xoan" />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">🌸 Ảnh Bìa Chính Đầu Trang (Ảnh lớn ngay dưới Save The Date)</label>
+              <div class="photo-field" style="margin-bottom:0;background:#fff">
+                <img class="photo-thumb" id="quick-hero-preview" src="" alt="Ảnh đầu trang" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" id="quick-hero-photo" placeholder="Dán link ảnh hoặc bấm Tải ảnh từ máy..." />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="#quick-hero-photo">📁 Tải ảnh đầu trang từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Groom Family -->
+          <div class="section-card">
+            <h2 class="section-title">🤵 Thông Tin Bên Nhà Trai</h2>
+            <p class="section-desc">Điền họ tên bố mẹ chú rể, địa chỉ tư gia nhà trai và ảnh chú rể.</p>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Họ tên Bố Chú Rể</label>
+                <input type="text" class="form-input" id="groom-father" placeholder="VD: Ông : Nguyễn Đức Hữ" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Họ tên Mẹ Chú Rể</label>
+                <input type="text" class="form-input" id="groom-mother" placeholder="VD: Bà : Trịnh Thị Hoàn" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Địa chỉ Nhà Trai (Thôn / Xã / Phường)</label>
+                <input type="text" class="form-input" id="groom-addr-1" placeholder="VD: Du Tràng, Đông Cứu" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tỉnh / Thành phố (Nhà Trai)</label>
+                <input type="text" class="form-input" id="groom-addr-2" placeholder="VD: Bắc Ninh" />
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px">
+              <button type="button" class="btn btn-sm btn-soft" id="btn-sync-groom-venue">📌 Dùng địa chỉ Nhà Trai làm nơi tổ chức Tiệc Cưới</button>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Ảnh Chú Rể</label>
+              <div class="photo-field" style="margin-bottom:0">
+                <img class="photo-thumb" data-photo-preview="SWV1Oaou7d" src="" alt="Chú rể" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="SWV1Oaou7d" placeholder="Dán link ảnh hoặc tải ảnh từ máy..." />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='SWV1Oaou7d']">📁 Tải ảnh Chú Rể từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bride Family -->
+          <div class="section-card">
+            <h2 class="section-title">👰 Thông Tin Bên Nhà Gái</h2>
+            <p class="section-desc">Điền họ tên bố mẹ cô dâu, địa chỉ tư gia nhà gái và ảnh cô dâu.</p>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Họ tên Bố Cô Dâu</label>
+                <input type="text" class="form-input" id="bride-father" placeholder="VD: Ông : Nguyễn Đức Toản" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Họ tên Mẹ Cô Dâu</label>
+                <input type="text" class="form-input" id="bride-mother" placeholder="VD: Bà : Trần Thị Nở" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Địa chỉ Nhà Gái (Thôn / Tổ dân phố / Phường)</label>
+                <input type="text" class="form-input" id="bride-addr-1" placeholder="VD: TDP Phù Lương" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Quận / Huyện / Tỉnh (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-addr-2" placeholder="VD: P. Đào Viên, Bắc Ninh" />
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px">
+              <button type="button" class="btn btn-sm btn-soft" id="btn-sync-bride-venue">📌 Áp dụng địa chỉ Nhà Gái vào phần Tư Gia & Bản Đồ Nhà Gái</button>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Ảnh Cô Dâu</label>
+              <div class="photo-field" style="margin-bottom:0">
+                <img class="photo-thumb" data-photo-preview="HpVta-7Cfo" src="" alt="Cô dâu" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="HpVta-7Cfo" placeholder="Dán link ảnh hoặc tải ảnh từ máy..." />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='HpVta-7Cfo']">📁 Tải ảnh Cô Dâu từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden raw fields synced by the structured family inputs -->
+          <div style="display:none">
+            <input type="text" data-node-text="URI0n_EdMI" />
+            <input type="text" data-node-text="H7wR8HohuS" />
+            <textarea data-node-multiline="MH_6yyQPLw" id="raw-groom-parents"></textarea>
+            <textarea data-node-multiline="OmOohv4UUI" id="raw-groom-address"></textarea>
+            <input type="text" data-node-text="iHlrUYGh_T" />
+            <input type="text" data-node-text="-W5936VSfQ" />
+            <textarea data-node-multiline="9BuNZvrCFB" id="raw-bride-parents"></textarea>
+            <textarea data-node-multiline="4D7zik5Fhi" id="raw-bride-address"></textarea>
+          </div>
+        </div>
+
+        <!-- TAB 2: EXPANDABLE PHOTO ALBUM -->
+        <div class="tab-panel" id="tab-gallery">
+          <div class="section-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+              <div>
+                <h2 class="section-title">📸 Album Ảnh Cưới (Thêm ảnh không giới hạn)</h2>
+                <p class="section-desc" style="margin-bottom:0">Bạn có thể thay đổi các ảnh hiện có, tải nhiều ảnh từ máy lên cùng lúc hoặc thêm bao nhiêu ảnh tùy thích — thiệp sẽ tự động giãn chiều dài!</p>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" class="btn btn-soft" id="btn-upload-multi-album">📁 Tải nhiều ảnh từ máy lên</button>
+                <button type="button" class="btn btn-primary" id="btn-add-album-photo">+ Thêm 1 ô ảnh</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tiêu đề mục Album trên thiệp</label>
+              <input type="text" class="form-input" data-node-text="SIDzLaTN3V" />
+            </div>
+
+            <div id="dynamic-album-container" class="album-grid"></div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">🖼️ Ảnh Lớn Cuối Thiệp & Lời Cảm Ơn</h2>
+            <div class="form-group">
+              <label class="form-label">Ảnh lớn phía trên đồng hồ đếm ngược</label>
+              <div class="photo-field">
+                <img class="photo-thumb" data-photo-preview="7oBHC_gEAx" src="" alt="Ảnh cuối thiệp" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="7oBHC_gEAx" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='7oBHC_gEAx']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Lời cảm ơn cuối thiệp (Enter để xuống dòng)</label>
+              <textarea class="form-textarea" data-node-multiline="bipfSExTi5"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: BANK ACCOUNTS (STK & VIETQR) -->
+        <div class="tab-panel" id="tab-qr">
+          <div class="section-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+              <div>
+                <h2 class="section-title">🏦 Quản Lý Số Tài Khoản Ngân Hàng & QR Mừng Cưới</h2>
+                <p class="section-desc" style="margin-bottom:0">Chọn ngân hàng và nhập Số tài khoản (STK) để hệ thống <strong>tự động tạo mã QR chuyển khoản chuẩn VietQR</strong>, hoặc tải ảnh QR riêng lên. Bạn cũng có thể thêm nhiều STK (Chú rể, Cô dâu, Bố mẹ...).</p>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" class="btn btn-soft" id="btn-preview-qr-modal">👁️ Xem thử trên thiệp</button>
+                <button type="button" class="btn btn-primary" id="btn-add-bank-account">+ Thêm STK Ngân hàng</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Tiêu đề hiển thị dưới hộp quà trên thiệp</label>
+              <input type="text" class="form-input" data-node-text="Jtt0CMVBFF" />
+            </div>
+
+            <div id="bank-accounts-list"></div>
+          </div>
+        </div>
+
+        <!-- TAB 4: HERO COVER & MUSIC -->
+        <div class="tab-panel" id="tab-hero">
+          <div class="section-card">
+            <h2 class="section-title">🌸 Phần Mở Đầu (Trang Bìa)</h2>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Tên cặp đôi trên bìa</label>
+                <input type="text" class="form-input" data-node-text="TIXJxWpubS" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Dòng chữ nhỏ góc trên</label>
+                <input type="text" class="form-input" data-node-text="Wm-1v09tvk" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ảnh bìa chính (Khung vòm)</label>
+              <div class="photo-field">
+                <img class="photo-thumb" data-photo-preview="7WmUUnxK7X" src="" alt="Ảnh bìa" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="7WmUUnxK7X" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='7WmUUnxK7X']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Giờ (Bìa)</label>
+                <input type="text" class="form-input" data-node-text="zaKtKgy8bK" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thứ (Bìa)</label>
+                <input type="text" class="form-input" data-node-text="Gn3JH2Phal" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày.Tháng (Bìa)</label>
+                <input type="text" class="form-input" data-node-text="yJC0gHwb6z" />
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">2 số đầu Năm</label>
+                <input type="text" class="form-input" data-node-text="E9MnkeFAkI" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">2 số cuối Năm</label>
+                <input type="text" class="form-input" data-node-text="Gj1BKOWjjY" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày âm lịch (Bìa)</label>
+                <input type="text" class="form-input" data-node-text="QdE34AJsdR" />
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Câu trích dẫn tình yêu</label>
+              <textarea class="form-textarea" data-node-multiline="6cOUdEMcWT"></textarea>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">🎵 Nhạc Nền & Thông Tin Chia Sẻ Web</h2>
+            <div class="form-group">
+              <label class="form-label">Tiêu đề trang web</label>
+              <input type="text" class="form-input" data-general="pageTitle" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lời giới thiệu ngắn</label>
+              <textarea class="form-textarea" data-general="pageDesc"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ảnh đại diện chia sẻ (Thumbnail)</label>
+              <div class="photo-field">
+                <img class="photo-thumb" id="thumb-coverThumb" src="" alt="Cover" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-general="coverThumb" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-general='coverThumb']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nhạc nền MP3</label>
+              <div style="display:flex;gap:8px">
+                <input type="text" class="form-input" data-general="musicUrl" />
+                <button type="button" class="btn btn-soft" style="flex-shrink:0" data-upload-audio="[data-general='musicUrl']">🎵 Tải file MP3</button>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Tự động cuộn trang</label>
+                <select class="form-select" data-general-bool="autoScrollEnabled">
+                  <option value="true">Bật tự động cuộn</option>
+                  <option value="false">Tắt tự động cuộn</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Tốc độ cuộn</label>
+                <input type="number" step="0.1" min="0.1" max="3" class="form-input" data-general-num="autoScrollSpeed" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: INVITATION & CEREMONY VENUE -->
+        <div class="tab-panel" id="tab-ceremony">
+          <div class="section-card">
+            <h2 class="section-title">💌 Phần Thư Mời & Bộ 3 Ảnh</h2>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Tiêu đề Thư Mời</label>
+                <input type="text" class="form-input" data-node-text="uPLRlYN4gG" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Dòng phụ đề dưới Thư Mời</label>
+                <input type="text" class="form-input" data-node-text="sQDPnRDM87" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ảnh Thư Mời 1 (Bên trái)</label>
+              <div class="photo-field">
+                <img class="photo-thumb" data-photo-preview="1kEE_xfXqr" src="" alt="Ảnh trái" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="1kEE_xfXqr" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='1kEE_xfXqr']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ảnh Thư Mời 2 (Ở giữa)</label>
+              <div class="photo-field">
+                <img class="photo-thumb" data-photo-preview="Rm4Qdw8AaR" src="" alt="Ảnh giữa" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="Rm4Qdw8AaR" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='Rm4Qdw8AaR']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Ảnh Thư Mời 3 (Bên phải)</label>
+              <div class="photo-field">
+                <img class="photo-thumb" data-photo-preview="EVhJTrXwe9" src="" alt="Ảnh phải" />
+                <div class="photo-controls">
+                  <input type="text" class="form-input" data-node-photo="EVhJTrXwe9" />
+                  <div class="photo-actions">
+                    <button type="button" class="btn btn-sm btn-soft" data-upload-target="[data-node-photo='EVhJTrXwe9']">📁 Tải ảnh từ máy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Lời mời</label>
+                <input type="text" class="form-input" data-node-text="m1lgcb2klx" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tên khách mời</label>
+                <input type="text" class="form-input" data-node-text="whf1MUHxkJ" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">Nội dung lời mời</label>
+              <textarea class="form-textarea" data-node-multiline="StCt5qIszU"></textarea>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">🥂 Bữa Tiệc Thân Mật (Khung giờ 1)</h2>
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Giờ</label>
+                <input type="text" class="form-input" data-node-text="dsg03K9paw" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thứ</label>
+                <input type="text" class="form-input" data-node-text="9h6vN_J3cZ" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày (Số lớn)</label>
+                <input type="text" class="form-input" data-node-text="jGLGk_Q5MI" />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Tháng</label>
+                <input type="text" class="form-input" data-node-text="weZ1pmAg-M" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Năm</label>
+                <input type="text" class="form-input" data-node-text="JwSuWvN8-C" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày âm lịch</label>
+                <input type="text" class="form-input" data-node-text="Qt0PY8qU_B" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Tên địa điểm</label>
+                <input type="text" class="form-input" data-node-text="JcK0YX0tFL" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Địa chỉ chi tiết</label>
+                <input type="text" class="form-input" data-node-text="_PFyxYCW_z" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">💍 Tiệc Mừng Lễ Thành Hôn — Tư Gia Nhà Trai & Bản Đồ Nhà Trai</h2>
+            <div class="form-group">
+              <label class="form-label">Tiêu đề lễ (Nhà Trai)</label>
+              <input type="text" class="form-input" data-node-text="qneDUg6Big" />
+            </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Giờ</label>
+                <input type="text" class="form-input" data-node-text="cQBK0MsbTC" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thứ</label>
+                <input type="text" class="form-input" data-node-text="JBd1bbURAp" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày (Số lớn)</label>
+                <input type="text" class="form-input" data-node-text="VDXglRbkG-" />
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Tháng</label>
+                <input type="text" class="form-input" data-node-text="ODMRELT6Y2" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Năm</label>
+                <input type="text" class="form-input" data-node-text="otriXyjbbm" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày âm lịch</label>
+                <input type="text" class="form-input" data-node-text="20J8hGwITw" />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Tên địa điểm tổ chức (Nhà Trai)</label>
+                <input type="text" class="form-input" data-node-text="lnCEBf0zOn" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Địa chỉ chi tiết (Nhà Trai)</label>
+                <input type="text" class="form-input" data-node-text="Se271gu3cg" />
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">📍 Tọa độ hoặc Địa chỉ Google Maps (Nhà Trai)</label>
+              <input type="text" class="form-input" id="input-map-address" placeholder="Nhập địa chỉ hoặc tọa độ Google Maps Nhà Trai..." />
+            </div>
+          </div>
+
+          <!-- KHỐI TƯ GIA NHÀ GÁI, MAPS NHÀ GÁI & LỊCH NHÀ GÁI RIÊNG -->
+          <div class="section-card" style="border-color:rgba(232,67,106,0.4);background:linear-gradient(180deg,#fff9fb 0%,#ffffff 100%)">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+              <div>
+                <h2 class="section-title" style="color:var(--brand)">👰 Tư Gia Nhà Gái, Bản Đồ Maps Nhà Gái & Lịch Nhà Gái Riêng</h2>
+                <p class="section-desc" style="margin-bottom:0">Phần thông tin tiệc cưới, địa điểm tư gia, bản đồ chỉ đường Google Maps và tờ lịch đánh dấu trái tim riêng cho bên Nhà Gái.</p>
+              </div>
+              <button type="button" class="btn btn-sm btn-soft" id="btn-scroll-bride-section">👁️ Xem phần Nhà Gái trên thiệp</button>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Hiển thị khối Tư Gia Nhà Gái riêng</label>
+                <select class="form-select" id="bride-sec-enabled">
+                  <option value="true">Hiển thị trên thiệp (Khuyên dùng)</option>
+                  <option value="false">Ẩn khối Tư Gia Nhà Gái riêng</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tiêu đề Lễ Nhà Gái</label>
+                <input type="text" class="form-input" id="bride-sec-title" placeholder="VD: Tiệc Mừng Lễ Vu Quy" />
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Giờ (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-time" placeholder="VD: 16h30" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Thứ (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-dow" placeholder="VD: Thứ Bảy" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày số lớn (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-day" placeholder="VD: 03" />
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="form-group">
+                <label class="form-label">Tháng (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-month" placeholder="VD: Tháng 10" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Năm (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-year" placeholder="VD: Năm 2026" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Ngày âm lịch (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-lunar" placeholder="VD: (Tức ngày 23 tháng 08 năm Bính Ngọ)" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Tên địa điểm tổ chức (Nhà Gái)</label>
+                <input type="text" class="form-input" id="bride-sec-venue-name" placeholder="VD: Tư gia nhà gái" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Địa chỉ Tư gia Nhà Gái</label>
+                <input type="text" class="form-input" id="bride-sec-venue-addr" placeholder="VD: TDP Phù Lương - P. Đào Viên - Bắc Ninh" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">📍 Địa chỉ / Tọa độ Google Maps Nhà Gái</label>
+                <input type="text" class="form-input" id="bride-sec-map-addr" placeholder="Nhập địa chỉ hoặc tọa độ Google Maps Nhà Gái..." />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">📅 Ngày cưới trên Lịch Nhà Gái riêng (Trái tim đỏ)</label>
+                <input type="date" class="form-input" id="bride-sec-cal-date" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: TIMELINE, CALENDAR & COUNTDOWN -->
+        <div class="tab-panel" id="tab-calendar">
+          <div class="section-card">
+            <h2 class="section-title">📅 Lịch Tháng Nhà Trai & Đồng Hồ Đếm Ngược</h2>
+            <p class="section-desc">Chọn ngày cưới bên Nhà Trai để tự động vẽ tờ lịch Nhà Trai có biểu tượng trái tim đỏ và đặt thời gian đếm ngược.</p>
+            <div class="grid-2">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Ngày cưới Nhà Trai (Đánh dấu trái tim)</label>
+                <input type="date" class="form-input" id="input-calendar-date" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Giờ đếm ngược</label>
+                <input type="time" class="form-input" id="input-calendar-time" />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card" style="border-color:rgba(232,67,106,0.35);background:#fff9fb">
+            <h2 class="section-title" style="color:var(--brand)">👰 Lịch Tháng Nhà Gái Riêng & Bản Đồ Nhà Gái</h2>
+            <p class="section-desc">Chọn ngày cưới riêng cho tờ lịch bên Nhà Gái và địa chỉ Google Maps Nhà Gái.</p>
+            <div class="grid-2">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">📅 Ngày cưới trên Lịch Nhà Gái riêng (Đánh dấu trái tim)</label>
+                <input type="date" class="form-input" id="input-bride-calendar-date-tab6" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">📍 Địa chỉ Google Maps Nhà Gái</label>
+                <input type="text" class="form-input" id="input-bride-map-tab6" placeholder="Nhập địa chỉ hoặc tọa độ Google Maps Nhà Gái..." />
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">⏰ Dòng Thời Gian Nghi Thức</h2>
+            <div class="form-group">
+              <label class="form-label">Tiêu đề ngày giờ nghi thức</label>
+              <input type="text" class="form-input" data-node-text="ZE_-gYrgaF" />
+            </div>
+            <div class="grid-3">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Mốc 1</label>
+                <input type="text" class="form-input" data-node-text="XdYA3Mjs5Q" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Mốc 2</label>
+                <input type="text" class="form-input" data-node-text="JvW9KyNMyx" />
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Mốc 3</label>
+                <input type="text" class="form-input" data-node-text="TgmMWy5jdm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 7: GUESTS (RSVP & WISHES) -->
+        <div class="tab-panel" id="tab-guests">
+          <div class="section-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+              <div>
+                <h2 class="section-title">📋 Danh Sách Khách Xác Nhận Tham Dự (RSVP)</h2>
+                <p class="section-desc" style="margin-bottom:0">Dữ liệu khách điền từ form "Xác nhận tham dự" cuối thiệp.</p>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button type="button" class="btn btn-sm" id="btn-export-rsvp">📊 Xuất CSV</button>
+                <button type="button" class="btn btn-sm btn-danger" id="btn-clear-rsvp">🗑️ Xóa hết</button>
+              </div>
+            </div>
+
+            <div class="stat-row">
+              <div class="stat-box">
+                <div class="stat-val" id="stat-total-rsvp">0</div>
+                <div class="stat-lbl">Lượt phản hồi</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="stat-attending-guests">0</div>
+                <div class="stat-lbl">Tổng số khách tham dự</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="stat-declined-rsvp">0</div>
+                <div class="stat-lbl">Báo bận</div>
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Họ và tên</th>
+                  <th>Trạng thái</th>
+                  <th>Số người</th>
+                  <th>Thời gian</th>
+                </tr>
+              </thead>
+              <tbody id="rsvp-table-body"></tbody>
+            </table>
+          </div>
+
+          <div class="section-card">
+            <h2 class="section-title">💬 Quản Lý Lời Chúc Mừng</h2>
+            <div class="grid-2" style="margin-bottom:12px">
+              <input type="text" class="form-input" id="admin-wish-sender" placeholder="Tên người gửi..." />
+              <div style="display:flex;gap:8px">
+                <input type="text" class="form-input" id="admin-wish-content" placeholder="Nội dung lời chúc..." />
+                <button type="button" class="btn btn-primary" style="flex-shrink:0" id="btn-add-wish">+ Thêm</button>
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Người gửi</th>
+                  <th>Lời chúc</th>
+                  <th style="width:80px">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="wishes-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Right Live Phone Preview -->
+    <aside class="preview-pane">
+      <div class="preview-header">
+        <span>📱 Xem trước trực tiếp (Real-time)</span>
+        <button type="button" class="btn btn-sm" id="btn-reload-preview">↻ Làm mới</button>
+      </div>
+      <div class="phone-mockup">
+        <iframe id="preview-iframe" src="index.html?preview=mobile" title="Xem trước thiệp cưới"></iframe>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Hidden File Inputs -->
+  <input type="file" id="global-file-picker" class="file-input-hidden" accept="image/*" />
+  <input type="file" id="multi-album-picker" class="file-input-hidden" accept="image/*" multiple />
+  <input type="file" id="global-audio-picker" class="file-input-hidden" accept="audio/*" />
+  <input type="file" id="import-json-picker" class="file-input-hidden" accept=".json,application/json" />
+
+  <!-- Toast -->
+  <div id="admin-toast" class="admin-toast"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const VIET_BANKS = [
+        { code: 'VCB', name: 'Vietcombank - Ngoại thương VN' },
+        { code: 'TCB', name: 'Techcombank - Kỹ thương VN' },
+        { code: 'MB', name: 'MBBank - Quân Đội' },
+        { code: 'BIDV', name: 'BIDV - Đầu tư & Phát triển' },
+        { code: 'ICB', name: 'VietinBank - Công thương VN' },
+        { code: 'VBA', name: 'Agribank - NN & PT Nông thôn' },
+        { code: 'ACB', name: 'ACB - Á Châu' },
+        { code: 'VPB', name: 'VPBank - Việt Nam Thịnh Vượng' },
+        { code: 'TPB', name: 'TPBank - Tiên Phong' },
+        { code: 'STB', name: 'Sacombank - Sài Gòn Thương Tín' },
+        { code: 'VIB', name: 'VIB - Quốc Tế' },
+        { code: 'SHB', name: 'SHB - Sài Gòn Hà Nội' },
+        { code: 'HDB', name: 'HDBank - Phát triển TP.HCM' },
+        { code: 'MSB', name: 'MSB - Hàng Hải' },
+        { code: 'OCB', name: 'OCB - Phương Đông' },
+        { code: 'SEAB', name: 'SeABank - Đông Nam Á' },
+        { code: 'LPB', name: 'LPBank - Lộc Phát' },
+        { code: 'EIB', name: 'Eximbank - Xuất Nhập Khẩu' }
+      ];
+
+      const DEFAULT_CONFIG = {
+        "general": {
+                "pageTitle": "Vĩnh Hoàng💕Xoan Xoan",
+                "pageDesc": "Trân trọng kính mời quý khách đến dự lễ cưới của chúng tôi. Rất mong được đón tiếp quý khách!",
+                "coverThumb": "uploads/1794324127512-x21ut2.jpg",
+                "musicUrl": "uploads/1794324139690-w282ac.mp3",
+                "autoScrollEnabled": true,
+                "autoScrollSpeed": 0.65
+        },
+        "texts": {
+                "Wm-1v09tvk": "designed by Tung5DX",
+                "TIXJxWpubS": "<br>Vĩnh Hoàng &amp; Xoan Xoan",
+                "zaKtKgy8bK": "12h",
+                "Gn3JH2Phal": "Chủ Nhật",
+                "yJC0gHwb6z": "29.11",
+                "E9MnkeFAkI": "20",
+                "Gj1BKOWjjY": "26",
+                "QdE34AJsdR": "tức ngày 21/10/2026 âm lịch",
+                "6cOUdEMcWT": "Hôn nhân là chuyện cả đời<div>Yêu người vừa ý, cưới người mình thương</div>",
+                "URI0n_EdMI": "Nhà Trai",
+                "MH_6yyQPLw": "Ông : Nguyễn Vĩnh Sơn<div>Bà : Nguyễn Thị Sơn</div>",
+                "OmOohv4UUI": "Du Tràng, Đông Cứu<div>Bắc Ninh</div>",
+                "H7wR8HohuS": "Chú rể",
+                "WfJzkvPoSj": "Vĩnh Hoàng",
+                "iHlrUYGh_T": "Nhà Gái",
+                "9BuNZvrCFB": "Ông : Trần Văn Hướng<div>Bà : Trần Thị Toản</div>",
+                "4D7zik5Fhi": "Yên Việt,  Đông Cứu<div>Bắc Ninh</div>",
+                "-W5936VSfQ": "Cô dâu",
+                "mRu4SjmOw3": "Xoan Xoan",
+                "uPLRlYN4gG": "Thư Mời",
+                "sQDPnRDM87": "Tham dự lễ cưới Vĩnh Hoàng &amp; Xoan Xoan",
+                "m1lgcb2klx": "trân trọng kính mời",
+                "whf1MUHxkJ": "Quý Khách",
+                "StCt5qIszU": "tới dự bữa tiệc thân mật<div>chung vui cùng gia đình chúng tôi</div>",
+                "dsg03K9paw": "17h00",
+                "9h6vN_J3cZ": "Thứ Bảy",
+                "jGLGk_Q5MI": "28",
+                "weZ1pmAg-M": "Tháng 11",
+                "JwSuWvN8-C": "Năm 2026",
+                "Qt0PY8qU_B": "(Tức ngày 28 tháng 10 năm Bính Ngọ)",
+                "JcK0YX0tFL": "Tư gia nhà trai",
+                "_PFyxYCW_z": "Du Tràng, Đông Cứu - Bắc Ninh",
+                "qneDUg6Big": "Tiệc Mừng lễ thành hôn",
+                "cQBK0MsbTC": "12h00",
+                "JBd1bbURAp": "Chủ Nhật",
+                "VDXglRbkG-": "29",
+                "ODMRELT6Y2": "Tháng 11",
+                "otriXyjbbm": "Năm 2026",
+                "20J8hGwITw": "(Tức ngày 28 tháng 10 năm Bính Ngọ)",
+                "lnCEBf0zOn": "Tư gia nhà trai",
+                "Se271gu3cg": "Du Tràng, Đông Cứu - Bắc Ninh",
+                "ZE_-gYrgaF": "12h00 Chủ nhật 29.11.2026",
+                "XdYA3Mjs5Q": "Cắt bánh",
+                "JvW9KyNMyx": "Trao nhẫn",
+                "TgmMWy5jdm": "Chụp hình lưu niệm",
+                "SIDzLaTN3V": "Album ảnh cưới",
+                "Jtt0CMVBFF": "Hộp Quà Mừng",
+                "bipfSExTi5": "Tiệc cưới của chúng mình sẽ thật sự trọn vẹn khi có bạn cùng sẻ chia niềm vui và chứng kiến khoảnh khắc đặc biệt này,<div>Sự hiện diện của bạn chính là niềm vinh hạnh và là món quà quý giá nhất dành cho chúng mình</div><div>Hẹn gặp bạn trong ngày trọng đại của chúng mình</div>"
+        },
+        "photos": {
+                "7WmUUnxK7X": "uploads/1794324127512-x21ut2.jpg",
+                "SWV1Oaou7d": "uploads/1794324026361-81cpfz.jpg",
+                "HpVta-7Cfo": "uploads/1794324033189-fhqzbl.jpg",
+                "1kEE_xfXqr": "uploads/1794324166754-q1mspc.jpg",
+                "Rm4Qdw8AaR": "uploads/1794324175094-gs3egh.jpg",
+                "EVhJTrXwe9": "uploads/1794324185838-d4plaf.jpg",
+                "7oBHC_gEAx": "uploads/1794324109795-nndn72.jpg"
+        },
+        "albumPhotos": [
+                "uploads/1794324059556-yuh081.jpg",
+                "uploads/1794324063277-oun8k7.jpg",
+                "uploads/1794324068371-tunt6e.jpg",
+                "uploads/1794324075906-rltb7m.jpg",
+                "uploads/1794324087929-0ra2ai.jpg",
+                "uploads/1794324095650-51gk0t.jpg"
+        ],
+        "bankAccounts": [
+                {
+                        "title": "Chú Rể: Vĩnh Hoàng",
+                        "bankCode": "VCB",
+                        "bankName": "Vietcombank",
+                        "accountNumber": "1055836219",
+                        "accountHolder": "NGUYEN VINH HOANG",
+                        "branch": "Bắc Ninh",
+                        "qrUrl": ""
+                },
+                {
+                        "title": "Cô Dâu: Xoan Xoan",
+                        "bankCode": "BIDV",
+                        "bankName": "BIDV",
+                        "accountNumber": "2561175932",
+                        "accountHolder": "TRAN THI XOAN",
+                        "branch": "Bắc Ninh",
+                        "qrUrl": ""
+                }
+        ],
+        "map": {
+                "address": "21°05'00.1\"N 106°09'32.2\"E"
+        },
+        "calendar": {
+                "selectedDate": "2026-11-29",
+                "selectedTime": "12:00"
+        },
+        "brideSection": {
+                "enabled": true,
+                "partyTitle": "Tiệc Mừng Lễ Vu Quy",
+                "partySub": "được tổ chức vào lúc",
+                "time": "8h30",
+                "dayOfWeek": "Chủ Nhật",
+                "day": "29",
+                "month": "Tháng 11",
+                "year": "Năm 2026",
+                "lunarDate": "(Tức ngày 28 tháng 10 năm Bính Ngọ)",
+                "venueHeader": "Địa điểm tổ chức",
+                "venueName": "Tư gia nhà gái",
+                "venueAddress": "Yên Việt, Đông Cứu - Bắc Ninh",
+                "mapAddress": "21°03'52.9\"N 106°09'35.2\"E",
+                "calendarDate": "2026-11-29"
+        }
+};
+
+      let currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function htmlToPlain(html, multiline = false) {
+        if (!html) return '';
+        let s = String(html);
+        if (multiline) {
+          s = s.replace(/<div>/gi, '\n').replace(/<\/div>/gi, '').replace(/<br\s*\/?>/gi, '\n');
+        } else {
+          s = s.replace(/^<br\s*\/?>/i, '');
+        }
+        const tmp = document.createElement('textarea');
+        tmp.innerHTML = s.replace(/&nbsp;/g, ' ');
+        return tmp.value;
+      }
+
+      function plainToHtml(text, nodeId, multiline = false) {
+        const escaped = String(text || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        if (multiline) {
+          const lines = escaped.split('\n');
+          if (lines.length <= 1) return lines[0] || '';
+          return lines[0] + lines.slice(1).map(l => `<div>${l}</div>`).join('');
+        }
+        if (nodeId === 'TIXJxWpubS') {
+          return '<br>' + escaped;
+        }
+        return escaped;
+      }
+
+      let toastTimeout = null;
+      function showToast(msg) {
+        const el = document.getElementById('admin-toast');
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => el.classList.remove('show'), 2600);
+      }
+
+      // --- SMART COUPLE NAME SYNC ---
+      const groomNameInp = document.getElementById('quick-groom-name');
+      const brideNameInp = document.getElementById('quick-bride-name');
+
+      function syncCoupleNamesEverywhere() {
+        const groom = (groomNameInp.value || '').trim() || 'Chú Rể';
+        const bride = (brideNameInp.value || '').trim() || 'Cô Dâu';
+
+        const pageTitleInp = document.querySelector('[data-general="pageTitle"]');
+        const heroNamesInp = document.querySelector('[data-node-text="TIXJxWpubS"]');
+        const inviteSubInp = document.querySelector('[data-node-text="sQDPnRDM87"]');
+
+        if (pageTitleInp) pageTitleInp.value = `${groom}💕${bride}`;
+        if (heroNamesInp) heroNamesInp.value = `${groom} & ${bride}`;
+        if (inviteSubInp) inviteSubInp.value = `Tham dự lễ cưới ${groom} & ${bride}`;
+
+        if (currentConfig.bankAccounts && currentConfig.bankAccounts.length >= 2) {
+          if (currentConfig.bankAccounts[0].title.startsWith('Chú Rể:')) {
+            currentConfig.bankAccounts[0].title = `Chú Rể: ${groom}`;
+          }
+          if (currentConfig.bankAccounts[1].title.startsWith('Cô Dâu:')) {
+            currentConfig.bankAccounts[1].title = `Cô Dâu: ${bride}`;
+          }
+          renderBankAccountsEditor();
+        }
+      }
+
+      groomNameInp.addEventListener('input', syncCoupleNamesEverywhere);
+      brideNameInp.addEventListener('input', syncCoupleNamesEverywhere);
+
+      // --- STRUCTURED FAMILY FIELDS SYNC ---
+      const groomFather = document.getElementById('groom-father');
+      const groomMother = document.getElementById('groom-mother');
+      const groomAddr1 = document.getElementById('groom-addr-1');
+      const groomAddr2 = document.getElementById('groom-addr-2');
+
+      const brideFather = document.getElementById('bride-father');
+      const brideMother = document.getElementById('bride-mother');
+      const brideAddr1 = document.getElementById('bride-addr-1');
+      const brideAddr2 = document.getElementById('bride-addr-2');
+
+      function syncFamilyStructuredToRaw() {
+        const rawGroomParents = document.getElementById('raw-groom-parents');
+        const rawGroomAddr = document.getElementById('raw-groom-address');
+        const rawBrideParents = document.getElementById('raw-bride-parents');
+        const rawBrideAddr = document.getElementById('raw-bride-address');
+
+        if (rawGroomParents) {
+          rawGroomParents.value = [groomFather.value, groomMother.value].filter(Boolean).join('\n');
+        }
+        if (rawGroomAddr) {
+          rawGroomAddr.value = [groomAddr1.value, groomAddr2.value].filter(Boolean).join('\n');
+        }
+        if (rawBrideParents) {
+          rawBrideParents.value = [brideFather.value, brideMother.value].filter(Boolean).join('\n');
+        }
+        if (rawBrideAddr) {
+          rawBrideAddr.value = [brideAddr1.value, brideAddr2.value].filter(Boolean).join('\n');
+        }
+      }
+
+      function populateFamilyStructuredFromRaw() {
+        const gp = htmlToPlain(currentConfig.texts['MH_6yyQPLw'], true).split('\n');
+        groomFather.value = gp[0] || '';
+        groomMother.value = gp.slice(1).join(' ') || '';
+
+        const ga = htmlToPlain(currentConfig.texts['OmOohv4UUI'], true).split('\n');
+        groomAddr1.value = ga[0] || '';
+        groomAddr2.value = ga.slice(1).join(', ') || '';
+
+        const bp = htmlToPlain(currentConfig.texts['9BuNZvrCFB'], true).split('\n');
+        brideFather.value = bp[0] || '';
+        brideMother.value = bp.slice(1).join(' ') || '';
+
+        const ba = htmlToPlain(currentConfig.texts['4D7zik5Fhi'], true).split('\n');
+        brideAddr1.value = ba[0] || '';
+        brideAddr2.value = ba.slice(1).join(', ') || '';
+      }
+
+      [groomFather, groomMother, groomAddr1, groomAddr2, brideFather, brideMother, brideAddr1, brideAddr2].forEach((el) => {
+        el.addEventListener('input', () => {
+          syncFamilyStructuredToRaw();
+          pushLivePreview();
+        });
+      });
+
+      document.getElementById('btn-sync-groom-venue').addEventListener('click', () => {
+        const fullAddr = [groomAddr1.value.trim(), groomAddr2.value.trim()].filter(Boolean).join(' - ');
+        document.querySelector('[data-node-text="JcK0YX0tFL"]').value = 'Tư gia nhà trai';
+        document.querySelector('[data-node-text="_PFyxYCW_z"]').value = fullAddr;
+        document.querySelector('[data-node-text="lnCEBf0zOn"]').value = 'Tư gia nhà trai';
+        document.querySelector('[data-node-text="Se271gu3cg"]').value = fullAddr;
+        pushLivePreview();
+        showToast('📌 Đã áp dụng địa chỉ Nhà Trai cho nơi tổ chức Tiệc Cưới!');
+      });
+
+      document.getElementById('btn-sync-bride-venue').addEventListener('click', () => {
+        const fullAddr = [brideAddr1.value.trim(), brideAddr2.value.trim()].filter(Boolean).join(' - ');
+        const mapAddr = [brideAddr1.value.trim(), brideAddr2.value.trim()].filter(Boolean).join(', ');
+        const venueNameEl = document.getElementById('bride-sec-venue-name');
+        const venueAddrEl = document.getElementById('bride-sec-venue-addr');
+        const mapAddrEl = document.getElementById('bride-sec-map-addr');
+        const mapTab6El = document.getElementById('input-bride-map-tab6');
+        if (venueNameEl) venueNameEl.value = 'Tư gia nhà gái';
+        if (venueAddrEl) venueAddrEl.value = fullAddr;
+        if (mapAddrEl) mapAddrEl.value = mapAddr;
+        if (mapTab6El) mapTab6El.value = mapAddr;
+        pushLivePreview();
+        if (previewIframe && previewIframe.contentWindow) {
+          previewIframe.contentWindow.postMessage({ type: 'CL_SCROLL_TO', top: 3630 }, '*');
+        }
+        showToast('📌 Đã áp dụng địa chỉ vào phần Tư Gia Nhà Gái & Bản Đồ Nhà Gái!');
+      });
+
+      const scrollBrideBtn = document.getElementById('btn-scroll-bride-section');
+      if (scrollBrideBtn) {
+        scrollBrideBtn.addEventListener('click', () => {
+          pushLivePreview();
+          if (previewIframe && previewIframe.contentWindow) {
+            previewIframe.contentWindow.postMessage({ type: 'CL_SCROLL_TO', top: 3630 }, '*');
+          }
+        });
+      }
+
+      // Sync Bride Calendar Date & Map between Tab 5 and Tab 6
+      const brideCalTab5 = document.getElementById('bride-sec-cal-date');
+      const brideCalTab6 = document.getElementById('input-bride-calendar-date-tab6');
+      const brideMapTab5 = document.getElementById('bride-sec-map-addr');
+      const brideMapTab6 = document.getElementById('input-bride-map-tab6');
+      if (brideCalTab5 && brideCalTab6) {
+        brideCalTab5.addEventListener('input', () => { brideCalTab6.value = brideCalTab5.value; });
+        brideCalTab6.addEventListener('input', () => { brideCalTab5.value = brideCalTab6.value; });
+      }
+      if (brideMapTab5 && brideMapTab6) {
+        brideMapTab5.addEventListener('input', () => { brideMapTab6.value = brideMapTab5.value; });
+        brideMapTab6.addEventListener('input', () => { brideMapTab5.value = brideMapTab6.value; });
+      }
+
+      // --- DYNAMIC ALBUM PHOTO EDITOR ---
+      const albumContainer = document.getElementById('dynamic-album-container');
+
+      function renderAlbumEditor() {
+        if (!albumContainer) return;
+        const list = currentConfig.albumPhotos || [];
+        albumContainer.innerHTML = list
+          .map(
+            (url, idx) => `
+          <div class="album-card">
+            <img src="${escapeHtml(url)}" alt="Ảnh ${idx + 1}" />
+            <div class="album-card-body">
+              <div class="album-card-title">
+                <span>Ảnh #${idx + 1} (${idx % 2 === 0 ? 'Cột Trái' : 'Cột Phải'})</span>
+                <div style="display:flex;gap:4px">
+                  ${idx > 0 ? `<button type="button" class="btn btn-sm" style="padding:0 6px;height:24px" data-album-move="${idx}:-1" title="Chuyển lên">⬆️</button>` : ''}
+                  ${idx < list.length - 1 ? `<button type="button" class="btn btn-sm" style="padding:0 6px;height:24px" data-album-move="${idx}:1" title="Chuyển xuống">⬇️</button>` : ''}
+                  <button type="button" class="btn btn-sm btn-danger" style="padding:0 7px;height:24px" data-album-del="${idx}" title="Xóa ảnh này">✕</button>
+                </div>
+              </div>
+              <input type="text" class="form-input" style="font-size:12px;padding:7px 9px" data-album-idx="${idx}" value="${escapeHtml(url)}" placeholder="Dán link ảnh hoặc bấm Tải ảnh..." />
+              <div class="photo-actions">
+                <button type="button" class="btn btn-sm btn-soft" data-upload-album="${idx}">📁 Đổi ảnh từ máy</button>
+              </div>
+            </div>
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      if (albumContainer) {
+        albumContainer.addEventListener('input', (e) => {
+          const inp = e.target.closest('[data-album-idx]');
+          if (inp) {
+            const idx = parseInt(inp.getAttribute('data-album-idx'), 10);
+            currentConfig.albumPhotos[idx] = inp.value.trim();
+            const img = inp.closest('.album-card').querySelector('img');
+            if (img) img.src = inp.value.trim();
+            pushLivePreview();
+          }
+        });
+
+        albumContainer.addEventListener('click', (e) => {
+          const delBtn = e.target.closest('[data-album-del]');
+          if (delBtn) {
+            const idx = parseInt(delBtn.getAttribute('data-album-del'), 10);
+            if (currentConfig.albumPhotos.length <= 1) {
+              showToast('Album cần giữ lại ít nhất 1 ảnh!');
+              return;
+            }
+            currentConfig.albumPhotos.splice(idx, 1);
+            renderAlbumEditor();
+            pushLivePreview();
+            showToast('🗑️ Đã xóa ảnh khỏi Album!');
+            return;
+          }
+
+          const moveBtn = e.target.closest('[data-album-move]');
+          if (moveBtn) {
+            const [idxStr, dirStr] = moveBtn.getAttribute('data-album-move').split(':');
+            const idx = parseInt(idxStr, 10);
+            const dir = parseInt(dirStr, 10);
+            const target = idx + dir;
+            if (target >= 0 && target < currentConfig.albumPhotos.length) {
+              const tmp = currentConfig.albumPhotos[idx];
+              currentConfig.albumPhotos[idx] = currentConfig.albumPhotos[target];
+              currentConfig.albumPhotos[target] = tmp;
+              renderAlbumEditor();
+              pushLivePreview();
+            }
+          }
+        });
+      }
+
+      document.getElementById('btn-add-album-photo').addEventListener('click', () => {
+        currentConfig.albumPhotos.push(
+          'uploads/1794324059556-yuh081.jpg'
+        );
+        renderAlbumEditor();
+        pushLivePreview();
+        showToast('📸 Đã thêm 1 ô ảnh mới vào cuối Album!');
+      });
+
+      const multiAlbumPicker = document.getElementById('multi-album-picker');
+      document.getElementById('btn-upload-multi-album').addEventListener('click', () => {
+        multiAlbumPicker.value = '';
+        multiAlbumPicker.click();
+      });
+
+      multiAlbumPicker.addEventListener('change', async () => {
+        const files = Array.from(multiAlbumPicker.files || []);
+        if (files.length === 0) return;
+        for (const file of files) {
+          const url = await uploadFileToServer(file);
+          if (url) currentConfig.albumPhotos.push(url);
+        }
+        renderAlbumEditor();
+        saveAllConfig(true);
+        showToast(`📸 Đã tải lên và thêm ${files.length} ảnh mới vào Album!`);
+      });
+
+      // --- MULTI-BANK ACCOUNT (STK & VIETQR) EDITOR ---
+      const bankListContainer = document.getElementById('bank-accounts-list');
+
+      function computeVietQrUrl(acc) {
+        if (acc.qrUrl && acc.qrUrl.trim()) return acc.qrUrl.trim();
+        if (acc.bankCode && acc.accountNumber) {
+          return `https://img.vietqr.io/image/${encodeURIComponent(acc.bankCode)}-${encodeURIComponent(acc.accountNumber.trim())}-compact2.png?accountName=${encodeURIComponent(acc.accountHolder || '')}`;
+        }
+        return 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(acc.accountNumber || acc.title || 'WEDDING');
+      }
+
+      function renderBankAccountsEditor() {
+        if (!bankListContainer) return;
+        const accounts = currentConfig.bankAccounts || [];
+        bankListContainer.innerHTML = accounts
+          .map((acc, idx) => {
+            const qrPreviewUrl = computeVietQrUrl(acc);
+            const bankOptions = VIET_BANKS.map(
+              (b) => `<option value="${b.code}" ${acc.bankCode === b.code ? 'selected' : ''}>${b.name}</option>`
+            ).join('');
+
+            return `
+              <div class="bank-card" data-bank-card="${idx}">
+                <div class="bank-card-header">
+                  <strong style="font-size:14px;color:var(--brand)">💳 Tài khoản #${idx + 1}: ${escapeHtml(acc.title || 'Mừng cưới')}</strong>
+                  ${
+                    accounts.length > 1
+                      ? `<button type="button" class="btn btn-sm btn-danger" data-del-bank="${idx}">🗑️ Xóa STK này</button>`
+                      : ''
+                  }
+                </div>
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Tiêu đề / Vai trò (VD: Chú Rể: Đức Huy)</label>
+                    <input type="text" class="form-input" data-bank-field="${idx}:title" value="${escapeHtml(acc.title)}" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Chọn Ngân hàng (Tự tạo mã VietQR)</label>
+                    <select class="form-select" data-bank-field="${idx}:bankCode">
+                      <option value="">-- Chọn ngân hàng --</option>
+                      ${bankOptions}
+                    </select>
+                  </div>
+                </div>
+                <div class="grid-3">
+                  <div class="form-group">
+                    <label class="form-label">Số tài khoản (STK)</label>
+                    <input type="text" class="form-input" data-bank-field="${idx}:accountNumber" value="${escapeHtml(acc.accountNumber)}" placeholder="Nhập số tài khoản..." />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Tên chủ tài khoản (Không dấu)</label>
+                    <input type="text" class="form-input" data-bank-field="${idx}:accountHolder" value="${escapeHtml(acc.accountHolder)}" placeholder="VD: NGUYEN DUC HUY" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Chi nhánh / Ghi chú</label>
+                    <input type="text" class="form-input" data-bank-field="${idx}:branch" value="${escapeHtml(acc.branch)}" placeholder="VD: Bắc Ninh" />
+                  </div>
+                </div>
+                <div class="photo-field" style="margin-bottom:0">
+                  <img class="photo-thumb" data-bank-qr-preview="${idx}" style="width:84px;height:84px;object-fit:contain;background:#fff;padding:4px" src="${escapeHtml(qrPreviewUrl)}" alt="QR" />
+                  <div class="photo-controls">
+                    <label class="form-label">Link ảnh QR riêng (Để trống hệ thống sẽ tự tạo mã VietQR chuẩn theo STK trên)</label>
+                    <input type="text" class="form-input" data-bank-field="${idx}:qrUrl" value="${escapeHtml(acc.qrUrl)}" placeholder="Để trống = Tự động tạo VietQR từ Ngân hàng & STK..." />
+                    <div class="photo-actions">
+                      <button type="button" class="btn btn-sm btn-soft" data-upload-bank-qr="${idx}">📁 Tải ảnh QR từ máy</button>
+                      <button type="button" class="btn btn-sm" data-clear-bank-qr="${idx}">⚡ Dùng VietQR tự động</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      if (bankListContainer) {
+        bankListContainer.addEventListener('input', (e) => {
+          const inp = e.target.closest('[data-bank-field]');
+          if (!inp) return;
+          const [idxStr, field] = inp.getAttribute('data-bank-field').split(':');
+          const idx = parseInt(idxStr, 10);
+          const acc = currentConfig.bankAccounts[idx];
+          if (!acc) return;
+
+          acc[field] = inp.value;
+          if (field === 'bankCode') {
+            const found = VIET_BANKS.find((b) => b.code === inp.value);
+            acc.bankName = found ? found.name.split(' - ')[0] : '';
+          }
+          const qrImg = bankListContainer.querySelector(`[data-bank-qr-preview="${idx}"]`);
+          if (qrImg) qrImg.src = computeVietQrUrl(acc);
+          pushLivePreview();
+        });
+
+        bankListContainer.addEventListener('click', (e) => {
+          const delBtn = e.target.closest('[data-del-bank]');
+          if (delBtn) {
+            const idx = parseInt(delBtn.getAttribute('data-del-bank'), 10);
+            currentConfig.bankAccounts.splice(idx, 1);
+            renderBankAccountsEditor();
+            pushLivePreview();
+            showToast('🗑️ Đã xóa tài khoản ngân hàng!');
+            return;
+          }
+
+          const clearQrBtn = e.target.closest('[data-clear-bank-qr]');
+          if (clearQrBtn) {
+            const idx = parseInt(clearQrBtn.getAttribute('data-clear-bank-qr'), 10);
+            currentConfig.bankAccounts[idx].qrUrl = '';
+            renderBankAccountsEditor();
+            pushLivePreview();
+            showToast('⚡ Đã bật chế độ tự động tạo mã VietQR từ STK!');
+          }
+        });
+      }
+
+      document.getElementById('btn-add-bank-account').addEventListener('click', () => {
+        currentConfig.bankAccounts.push({
+          title: 'Gia Đình Mừng Cưới',
+          bankCode: 'MB',
+          bankName: 'MBBank',
+          accountNumber: '',
+          accountHolder: '',
+          branch: '',
+          qrUrl: ''
+        });
+        renderBankAccountsEditor();
+        pushLivePreview();
+        showToast('🏦 Đã thêm 1 tài khoản ngân hàng mới!');
+      });
+
+      const previewIframe = document.getElementById('preview-iframe');
+      document.getElementById('btn-preview-qr-modal').addEventListener('click', () => {
+        pushLivePreview();
+        if (previewIframe && previewIframe.contentWindow) {
+          previewIframe.contentWindow.postMessage({ type: 'CL_OPEN_MODAL', modalId: 'qr-box-modal' }, '*');
+        }
+      });
+
+      function normalizeAssetUrl(url) {
+        if (!url || typeof url !== 'string') return '';
+        let s = url.trim();
+        if (s.includes('1794322198097-vgjikg.jpg')) {
+          s = 'uploads/1794324127512-x21ut2.jpg';
+        }
+        if (s.startsWith('/uploads/')) {
+          s = s.slice(1);
+        }
+        return s;
+      }
+
+      // Sync Quick Hero Photo (Tab 1) <-> Hero Photo 7WmUUnxK7X (Tab 4) <-> Cover Thumbnail
+      const quickHeroInp = document.getElementById('quick-hero-photo');
+      const quickHeroPrev = document.getElementById('quick-hero-preview');
+      const tab4HeroInp = document.querySelector('[data-node-photo="7WmUUnxK7X"]');
+      const coverThumbInp = document.querySelector('[data-general="coverThumb"]');
+
+      if (quickHeroInp && tab4HeroInp) {
+        quickHeroInp.addEventListener('input', () => {
+          const v = normalizeAssetUrl(quickHeroInp.value);
+          tab4HeroInp.value = v;
+          if (quickHeroPrev) quickHeroPrev.src = v;
+          if (coverThumbInp) coverThumbInp.value = v;
+        });
+        tab4HeroInp.addEventListener('input', () => {
+          const v = normalizeAssetUrl(tab4HeroInp.value);
+          quickHeroInp.value = v;
+          if (quickHeroPrev) quickHeroPrev.src = v;
+          if (coverThumbInp) coverThumbInp.value = v;
+        });
+      }
+      if (coverThumbInp && tab4HeroInp && quickHeroInp) {
+        coverThumbInp.addEventListener('input', () => {
+          const v = normalizeAssetUrl(coverThumbInp.value);
+          tab4HeroInp.value = v;
+          quickHeroInp.value = v;
+          if (quickHeroPrev) quickHeroPrev.src = v;
+        });
+      }
+
+      // --- POPULATE & COLLECT ALL FORM FIELDS ---
+      function populateFormFromConfig() {
+        const g = currentConfig.general || {};
+        document.querySelectorAll('[data-general]').forEach((inp) => {
+          const k = inp.getAttribute('data-general');
+          const rawVal = g[k] || '';
+          inp.value = (k === 'coverThumb' || k === 'musicUrl') ? normalizeAssetUrl(rawVal) : rawVal;
+        });
+        document.querySelectorAll('[data-general-bool]').forEach((sel) => {
+          const k = sel.getAttribute('data-general-bool');
+          sel.value = String(g[k] !== false);
+        });
+        document.querySelectorAll('[data-general-num]').forEach((inp) => {
+          const k = inp.getAttribute('data-general-num');
+          inp.value = g[k] !== undefined ? g[k] : 0.65;
+        });
+        const coverThumbImg = document.getElementById('thumb-coverThumb');
+        if (coverThumbImg) coverThumbImg.src = normalizeAssetUrl(g.coverThumb || '');
+
+        document.querySelectorAll('[data-node-text]').forEach((inp) => {
+          const id = inp.getAttribute('data-node-text');
+          inp.value = htmlToPlain(currentConfig.texts[id], false);
+        });
+
+        document.querySelectorAll('[data-node-multiline]').forEach((ta) => {
+          const id = ta.getAttribute('data-node-multiline');
+          ta.value = htmlToPlain(currentConfig.texts[id], true);
+        });
+
+        populateFamilyStructuredFromRaw();
+
+        document.querySelectorAll('[data-node-photo]').forEach((inp) => {
+          const id = inp.getAttribute('data-node-photo');
+          const url = normalizeAssetUrl(currentConfig.photos[id] || '');
+          currentConfig.photos[id] = url;
+          inp.value = url;
+          const prev = document.querySelector(`[data-photo-preview="${id}"]`);
+          if (prev) prev.src = url;
+        });
+
+        if (quickHeroInp) {
+          const heroUrl = normalizeAssetUrl(currentConfig.photos['7WmUUnxK7X'] || '');
+          quickHeroInp.value = heroUrl;
+          if (quickHeroPrev) quickHeroPrev.src = heroUrl;
+        }
+
+        if (Array.isArray(currentConfig.albumPhotos)) {
+          currentConfig.albumPhotos = currentConfig.albumPhotos.map((u) => normalizeAssetUrl(u));
+        }
+
+        const mapInput = document.getElementById('input-map-address');
+        if (mapInput) mapInput.value = (currentConfig.map && currentConfig.map.address) || '';
+
+        const calDate = document.getElementById('input-calendar-date');
+        const calTime = document.getElementById('input-calendar-time');
+        if (calDate) calDate.value = (currentConfig.calendar && currentConfig.calendar.selectedDate) || '2026-10-04';
+        if (calTime) calTime.value = (currentConfig.calendar && currentConfig.calendar.selectedTime) || '12:30';
+
+        const bSec = Object.assign({}, DEFAULT_CONFIG.brideSection, currentConfig.brideSection || {});
+        const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+        setVal('bride-sec-enabled', String(bSec.enabled !== false));
+        setVal('bride-sec-title', bSec.partyTitle || 'Tiệc Mừng Lễ Vu Quy');
+        setVal('bride-sec-time', bSec.time || '16h30');
+        setVal('bride-sec-dow', bSec.dayOfWeek || 'Thứ Bảy');
+        setVal('bride-sec-day', bSec.day || '03');
+        setVal('bride-sec-month', bSec.month || 'Tháng 10');
+        setVal('bride-sec-year', bSec.year || 'Năm 2026');
+        setVal('bride-sec-lunar', bSec.lunarDate || '(Tức ngày 23 tháng 08 năm Bính Ngọ)');
+        setVal('bride-sec-venue-name', bSec.venueName || 'Tư gia nhà gái');
+        setVal('bride-sec-venue-addr', bSec.venueAddress || 'TDP Phù Lương - P. Đào Viên - Bắc Ninh');
+        setVal('bride-sec-map-addr', bSec.mapAddress || 'Phù Lương, Đào Viên, Quế Võ, Bắc Ninh');
+        setVal('bride-sec-cal-date', bSec.calendarDate || '2026-10-03');
+        setVal('input-bride-calendar-date-tab6', bSec.calendarDate || '2026-10-03');
+        setVal('input-bride-map-tab6', bSec.mapAddress || 'Phù Lương, Đào Viên, Quế Võ, Bắc Ninh');
+
+        renderAlbumEditor();
+        renderBankAccountsEditor();
+      }
+
+      function collectConfigFromForm() {
+        syncFamilyStructuredToRaw();
+
+        document.querySelectorAll('[data-general]').forEach((inp) => {
+          const k = inp.getAttribute('data-general');
+          currentConfig.general[k] = inp.value;
+        });
+        document.querySelectorAll('[data-general-bool]').forEach((sel) => {
+          const k = sel.getAttribute('data-general-bool');
+          currentConfig.general[k] = sel.value === 'true';
+        });
+        document.querySelectorAll('[data-general-num]').forEach((inp) => {
+          const k = inp.getAttribute('data-general-num');
+          currentConfig.general[k] = parseFloat(inp.value) || 0.65;
+        });
+
+        const coverThumbImg = document.getElementById('thumb-coverThumb');
+        if (coverThumbImg) coverThumbImg.src = currentConfig.general.coverThumb || '';
+
+        document.querySelectorAll('[data-node-text]').forEach((inp) => {
+          const id = inp.getAttribute('data-node-text');
+          currentConfig.texts[id] = plainToHtml(inp.value, id, false);
+        });
+
+        document.querySelectorAll('[data-node-multiline]').forEach((ta) => {
+          const id = ta.getAttribute('data-node-multiline');
+          currentConfig.texts[id] = plainToHtml(ta.value, id, true);
+        });
+
+        document.querySelectorAll('[data-node-photo]').forEach((inp) => {
+          const id = inp.getAttribute('data-node-photo');
+          const cleanUrl = normalizeAssetUrl(inp.value);
+          currentConfig.photos[id] = cleanUrl;
+          const prev = document.querySelector(`[data-photo-preview="${id}"]`);
+          if (prev) prev.src = cleanUrl;
+        });
+
+        if (quickHeroInp && quickHeroInp.value.trim()) {
+          const cleanHero = normalizeAssetUrl(quickHeroInp.value);
+          currentConfig.photos['7WmUUnxK7X'] = cleanHero;
+          if (quickHeroPrev) quickHeroPrev.src = cleanHero;
+          const prev7 = document.querySelector('[data-photo-preview="7WmUUnxK7X"]');
+          if (prev7) prev7.src = cleanHero;
+        }
+
+        if (currentConfig.general) {
+          currentConfig.general.coverThumb = normalizeAssetUrl(currentConfig.general.coverThumb);
+          currentConfig.general.musicUrl = normalizeAssetUrl(currentConfig.general.musicUrl);
+        }
+
+        currentConfig.map = {
+          address: document.getElementById('input-map-address').value.trim()
+        };
+
+        currentConfig.calendar = {
+          selectedDate: document.getElementById('input-calendar-date').value || '2026-10-04',
+          selectedTime: document.getElementById('input-calendar-time').value || '12:30'
+        };
+
+        const getVal = (id, fb = '') => { const el = document.getElementById(id); return el ? el.value.trim() : fb; };
+        currentConfig.brideSection = {
+          enabled: getVal('bride-sec-enabled', 'true') !== 'false',
+          partyTitle: getVal('bride-sec-title', 'Tiệc Mừng Lễ Vu Quy'),
+          partySub: 'được tổ chức vào lúc',
+          time: getVal('bride-sec-time', '16h30'),
+          dayOfWeek: getVal('bride-sec-dow', 'Thứ Bảy'),
+          day: getVal('bride-sec-day', '03'),
+          month: getVal('bride-sec-month', 'Tháng 10'),
+          year: getVal('bride-sec-year', 'Năm 2026'),
+          lunarDate: getVal('bride-sec-lunar', '(Tức ngày 23 tháng 08 năm Bính Ngọ)'),
+          venueHeader: 'Địa điểm tổ chức',
+          venueName: getVal('bride-sec-venue-name', 'Tư gia nhà gái'),
+          venueAddress: getVal('bride-sec-venue-addr', 'TDP Phù Lương - P. Đào Viên - Bắc Ninh'),
+          mapAddress: getVal('bride-sec-map-addr', 'Phù Lương, Đào Viên, Quế Võ, Bắc Ninh'),
+          calendarDate: getVal('bride-sec-cal-date', '2026-10-03')
+        };
+      }
+
+      function pushLivePreview() {
+        collectConfigFromForm();
+        if (previewIframe && previewIframe.contentWindow) {
+          previewIframe.contentWindow.postMessage(
+            {
+              type: 'CL_APPLY_CONFIG',
+              config: currentConfig
+            },
+            '*'
+          );
+        }
+      }
+
+      async function saveAllConfig(silent = false) {
+        collectConfigFromForm();
+        try {
+          localStorage.setItem('cl_huy11_custom_config', JSON.stringify(currentConfig));
+        } catch (e) {}
+
+        pushLivePreview();
+
+        try {
+          const res = await fetch('/api/config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(currentConfig)
+          });
+          if (res.ok && !silent) {
+            showToast('✅ Đã lưu mọi thay đổi thành công!');
+          } else if (!silent) {
+            showToast('✅ Đã lưu cấu hình vào trình duyệt!');
+          }
+        } catch (err) {
+          if (!silent) showToast('✅ Đã lưu cấu hình vào trình duyệt!');
+        }
+      }
+
+      document.querySelector('.editor-pane').addEventListener('input', (e) => {
+        if (!e.target.hasAttribute('data-album-idx') && !e.target.hasAttribute('data-bank-field')) {
+          pushLivePreview();
+        }
+      });
+      document.querySelector('.editor-pane').addEventListener('change', () => {
+        pushLivePreview();
+      });
+
+      document.getElementById('btn-save-all').addEventListener('click', () => saveAllConfig(false));
+
+      document.getElementById('btn-reset-default').addEventListener('click', async () => {
+        if (!confirm('Bạn có chắc muốn khôi phục toàn bộ nội dung thiệp về mặc định ban đầu?')) return;
+        currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        populateFormFromConfig();
+        await saveAllConfig(true);
+        showToast('🔄 Đã khôi phục nội dung mặc định!');
+      });
+
+      document.getElementById('btn-export-json').addEventListener('click', () => {
+        collectConfigFromForm();
+        const blob = new Blob([JSON.stringify(currentConfig, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'site-config.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      const importJsonPicker = document.getElementById('import-json-picker');
+      document.getElementById('btn-import-json').addEventListener('click', () => {
+        importJsonPicker.value = '';
+        importJsonPicker.click();
+      });
+      importJsonPicker.addEventListener('change', () => {
+        const file = importJsonPicker.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = async () => {
+          try {
+            const parsed = JSON.parse(reader.result);
+            currentConfig = Object.assign({}, DEFAULT_CONFIG, parsed, {
+              general: Object.assign({}, DEFAULT_CONFIG.general, parsed.general || {}),
+              texts: Object.assign({}, DEFAULT_CONFIG.texts, parsed.texts || {}),
+              photos: Object.assign({}, DEFAULT_CONFIG.photos, parsed.photos || {}),
+              albumPhotos: Array.isArray(parsed.albumPhotos) && parsed.albumPhotos.length > 0 ? parsed.albumPhotos : [...DEFAULT_CONFIG.albumPhotos],
+              bankAccounts: Array.isArray(parsed.bankAccounts) && parsed.bankAccounts.length > 0 ? parsed.bankAccounts : JSON.parse(JSON.stringify(DEFAULT_CONFIG.bankAccounts)),
+              map: Object.assign({}, DEFAULT_CONFIG.map, parsed.map || {}),
+              calendar: Object.assign({}, DEFAULT_CONFIG.calendar, parsed.calendar || {})
+            });
+            populateFormFromConfig();
+            await saveAllConfig(true);
+            showToast('📂 Đã nhập cấu hình JSON và lưu thành công!');
+          } catch (err) {
+            showToast('❌ File JSON không hợp lệ!');
+          }
+        };
+        reader.readAsText(file);
+      });
+
+      document.getElementById('btn-reload-preview').addEventListener('click', () => {
+        if (previewIframe) {
+          previewIframe.contentWindow.location.reload();
+          setTimeout(pushLivePreview, 600);
+        }
+      });
+
+      // Sidebar Navigation
+      const navItems = document.querySelectorAll('.nav-item');
+      const tabPanels = document.querySelectorAll('.tab-panel');
+      navItems.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          navItems.forEach((b) => b.classList.remove('active'));
+          tabPanels.forEach((p) => p.classList.remove('active'));
+          btn.classList.add('active');
+          const targetId = btn.getAttribute('data-tab');
+          const panel = document.getElementById(targetId);
+          if (panel) panel.classList.add('active');
+
+          const scrollTop = parseInt(btn.getAttribute('data-scroll') || '0', 10);
+          if (previewIframe && previewIframe.contentWindow) {
+            previewIframe.contentWindow.postMessage(
+              {
+                type: 'CL_SCROLL_TO',
+                top: scrollTop
+              },
+              '*'
+            );
+          }
+
+          if (targetId === 'tab-guests') {
+            renderRsvpTable();
+            renderWishesTable();
+          }
+        });
+      });
+
+      // File Upload Helper
+      const filePicker = document.getElementById('global-file-picker');
+      const audioPicker = document.getElementById('global-audio-picker');
+      let uploadCallback = null;
+
+      function uploadFileToServer(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const dataUrl = reader.result;
+            try {
+              const res = await fetch('/api/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ filename: file.name, dataUrl })
+              });
+              const json = await res.json();
+              if (json && json.ok && json.url) {
+                resolve(json.url);
+                return;
+              }
+            } catch (err) {}
+            resolve(dataUrl);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        const upBtn = e.target.closest('[data-upload-target]');
+        if (upBtn) {
+          const sel = upBtn.getAttribute('data-upload-target');
+          uploadCallback = (url) => {
+            const cleanUrl = normalizeAssetUrl(url);
+            const inp = document.querySelector(sel);
+            if (inp) {
+              inp.value = cleanUrl;
+              inp.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            pushLivePreview();
+            saveAllConfig(true);
+            showToast('📁 Đã tải ảnh lên thành công!');
+          };
+          filePicker.value = '';
+          filePicker.click();
+          return;
+        }
+
+        const albUpBtn = e.target.closest('[data-upload-album]');
+        if (albUpBtn) {
+          const idx = parseInt(albUpBtn.getAttribute('data-upload-album'), 10);
+          uploadCallback = (url) => {
+            currentConfig.albumPhotos[idx] = url;
+            renderAlbumEditor();
+            saveAllConfig(true);
+            showToast('📁 Đã cập nhật ảnh trong Album!');
+          };
+          filePicker.value = '';
+          filePicker.click();
+          return;
+        }
+
+        const bankQrBtn = e.target.closest('[data-upload-bank-qr]');
+        if (bankQrBtn) {
+          const idx = parseInt(bankQrBtn.getAttribute('data-upload-bank-qr'), 10);
+          uploadCallback = (url) => {
+            currentConfig.bankAccounts[idx].qrUrl = url;
+            renderBankAccountsEditor();
+            saveAllConfig(true);
+            showToast('📁 Đã tải ảnh mã QR ngân hàng!');
+          };
+          filePicker.value = '';
+          filePicker.click();
+          return;
+        }
+
+        const audBtn = e.target.closest('[data-upload-audio]');
+        if (audBtn) {
+          const sel = audBtn.getAttribute('data-upload-audio');
+          uploadCallback = (url) => {
+            const inp = document.querySelector(sel);
+            if (inp) inp.value = url;
+            pushLivePreview();
+            saveAllConfig(true);
+            showToast('🎵 Đã tải file nhạc MP3 lên!');
+          };
+          audioPicker.value = '';
+          audioPicker.click();
+        }
+      });
+
+      filePicker.addEventListener('change', async () => {
+        const file = filePicker.files[0];
+        if (!file || !uploadCallback) return;
+        const url = await uploadFileToServer(file);
+        uploadCallback(url);
+      });
+
+      audioPicker.addEventListener('change', async () => {
+        const file = audioPicker.files[0];
+        if (!file || !uploadCallback) return;
+        const url = await uploadFileToServer(file);
+        uploadCallback(url);
+      });
+
+      // RSVP & Wishes Tables
+      function renderRsvpTable() {
+        const tbody = document.getElementById('rsvp-table-body');
+        if (!tbody) return;
+        let list = [];
+        try {
+          list = JSON.parse(localStorage.getItem('cl_huy11_rsvp') || '[]');
+        } catch (e) {}
+
+        let attendingGuests = 0;
+        let declined = 0;
+        list.forEach((item) => {
+          if (item.attending) attendingGuests += parseInt(item.count || '1', 10);
+          else declined += 1;
+        });
+
+        document.getElementById('stat-total-rsvp').textContent = String(list.length);
+        document.getElementById('stat-attending-guests').textContent = String(attendingGuests);
+        document.getElementById('stat-declined-rsvp').textContent = String(declined);
+
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:24px">Chưa có khách nào gửi xác nhận tham dự.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = list
+          .slice()
+          .reverse()
+          .map(
+            (item) => `
+          <tr>
+            <td><strong>${escapeHtml(item.name || '')}</strong></td>
+            <td>${item.attending ? '<span class="badge-yes">Tham dự</span>' : '<span class="badge-no">Báo bận</span>'}</td>
+            <td>${item.attending ? (item.count || 1) + ' người' : '-'}</td>
+            <td>${item.submittedAt ? new Date(item.submittedAt).toLocaleString('vi-VN') : ''}</td>
+          </tr>
+        `
+          )
+          .join('');
+      }
+
+      document.getElementById('btn-export-rsvp').addEventListener('click', () => {
+        const list = JSON.parse(localStorage.getItem('cl_huy11_rsvp') || '[]');
+        if (list.length === 0) {
+          showToast('Chưa có dữ liệu RSVP để xuất!');
+          return;
+        }
+        const rows = [['Họ và tên', 'Tham dự', 'Số người', 'Thời gian']];
+        list.forEach((r) => rows.push([r.name, r.attending ? 'Có' : 'Không', r.count, r.submittedAt]));
+        const csv = '\uFEFF' + rows.map((r) => r.map((c) => `"${String(c || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'danh-sach-khach-moi-rsvp.csv';
+        a.click();
+      });
+
+      document.getElementById('btn-clear-rsvp').addEventListener('click', () => {
+        if (!confirm('Xóa toàn bộ danh sách khách xác nhận tham dự?')) return;
+        localStorage.removeItem('cl_huy11_rsvp');
+        renderRsvpTable();
+        showToast('🗑️ Đã xóa danh sách RSVP!');
+      });
+
+      function getWishesList() {
+        try {
+          const s = localStorage.getItem('cl_huy11_wishes');
+          if (s) return JSON.parse(s);
+        } catch (e) {}
+        return [
+          { senderName: 'Minh Tuấn & Ngọc Lan', content: 'Chúc Vĩnh Hoàng và Xoan Xoan trăm năm hạnh phúc, mãi mãi yêu thương nhau như ngày đầu nhé! 💕', createdAt: new Date().toISOString() },
+          { senderName: 'Thu Hà', content: 'Cô dâu xinh quá! Chúc hai bạn có một đám cưới thật trọn vẹn và sớm đón thiên thần nhỏ nha 🥰', createdAt: new Date().toISOString() },
+          { senderName: 'Hội bạn cấp 3 Bắc Ninh', content: 'Chúc mừng hạnh phúc đôi trẻ! Ngày vui nhất định bọn mình sẽ có mặt đông đủ quậy tới bến 🎉🥂', createdAt: new Date().toISOString() }
+        ];
+      }
+
+      function saveWishesList(list) {
+        localStorage.setItem('cl_huy11_wishes', JSON.stringify(list));
+        if (previewIframe && previewIframe.contentWindow) {
+          previewIframe.contentWindow.postMessage({ type: 'CL_RELOAD_WISHES' }, '*');
+        }
+      }
+
+      function renderWishesTable() {
+        const tbody = document.getElementById('wishes-table-body');
+        if (!tbody) return;
+        const list = getWishesList();
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--muted);padding:20px">Chưa có lời chúc nào.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = list
+          .map(
+            (w, idx) => `
+          <tr>
+            <td><strong>${escapeHtml(w.senderName || '')}</strong></td>
+            <td>${escapeHtml(w.content || '')}</td>
+            <td><button type="button" class="btn btn-sm btn-danger" data-del-wish="${idx}">Xóa</button></td>
+          </tr>
+        `
+          )
+          .join('');
+      }
+
+      document.getElementById('wishes-table-body').addEventListener('click', (e) => {
+        const delBtn = e.target.closest('[data-del-wish]');
+        if (delBtn) {
+          const idx = parseInt(delBtn.getAttribute('data-del-wish'), 10);
+          const list = getWishesList();
+          list.splice(idx, 1);
+          saveWishesList(list);
+          renderWishesTable();
+          showToast('🗑️ Đã xóa lời chúc!');
+        }
+      });
+
+      document.getElementById('btn-add-wish').addEventListener('click', () => {
+        const sender = document.getElementById('admin-wish-sender').value.trim();
+        const content = document.getElementById('admin-wish-content').value.trim();
+        if (!sender || !content) {
+          showToast('Vui lòng nhập tên và nội dung lời chúc!');
+          return;
+        }
+        const list = getWishesList();
+        list.unshift({ senderName: sender, content, createdAt: new Date().toISOString() });
+        saveWishesList(list);
+        document.getElementById('admin-wish-sender').value = '';
+        document.getElementById('admin-wish-content').value = '';
+        renderWishesTable();
+        showToast('💬 Đã thêm lời chúc mới!');
+      });
+
+      // Initialize Admin Studio
+      async function initAdmin() {
+        function mergeConfig(parsed) {
+          if (!parsed || typeof parsed !== 'object') return;
+          currentConfig = Object.assign({}, DEFAULT_CONFIG, parsed, {
+            general: Object.assign({}, DEFAULT_CONFIG.general, parsed.general || {}),
+            texts: Object.assign({}, DEFAULT_CONFIG.texts, parsed.texts || {}),
+            photos: Object.assign({}, DEFAULT_CONFIG.photos, parsed.photos || {}),
+            albumPhotos: Array.isArray(parsed.albumPhotos) && parsed.albumPhotos.length > 0 ? parsed.albumPhotos : [...DEFAULT_CONFIG.albumPhotos],
+            bankAccounts: Array.isArray(parsed.bankAccounts) && parsed.bankAccounts.length > 0 ? parsed.bankAccounts : JSON.parse(JSON.stringify(DEFAULT_CONFIG.bankAccounts)),
+            map: Object.assign({}, DEFAULT_CONFIG.map, parsed.map || {}),
+            calendar: Object.assign({}, DEFAULT_CONFIG.calendar, parsed.calendar || {})
+          });
+        }
+
+        try {
+          const localStr = localStorage.getItem('cl_huy11_custom_config');
+          if (localStr) mergeConfig(JSON.parse(localStr));
+        } catch (e) {}
+
+        for (const url of [`./site-config.json?t=${Date.now()}`, '/api/config']) {
+          try {
+            const res = await fetch(url);
+            if (res.ok) {
+              const serverCfg = await res.json();
+              if (serverCfg && Object.keys(serverCfg).length > 0) {
+                mergeConfig(serverCfg);
+                break;
+              }
+            }
+          } catch (e) {}
+        }
+
+        populateFormFromConfig();
+        try {
+          localStorage.setItem('cl_huy11_custom_config', JSON.stringify(currentConfig));
+        } catch (e) {}
+        renderRsvpTable();
+        renderWishesTable();
+
+        previewIframe.addEventListener('load', () => {
+          pushLivePreview();
+        });
+      }
+
+      initAdmin();
+    })();
+  </script>
+</body>
+</html>

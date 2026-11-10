@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CineLove">
+  <defs>
+    <linearGradient id="cl-logo-v" x1="32" y1="2" x2="32" y2="62" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FF97AB"/><stop offset=".5" stop-color="#FF6F8A"/><stop offset="1" stop-color="#F04E74"/></linearGradient>
+    <radialGradient id="cl-logo-sh" cx="32" cy="6" r="34" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <filter id="cl-logo-cs" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="1" stdDeviation=".9" flood-color="#B8234F" flood-opacity=".32"/></filter>
+  </defs>
+  <path d="M25.75 4.11A12.5 12.5 0 0 1 38.25 4.11L53.03 12.64A12.5 12.5 0 0 1 59.28 23.47L59.28 40.53A12.5 12.5 0 0 1 53.03 51.36L38.25 59.89A12.5 12.5 0 0 1 25.75 59.89L10.97 51.36A12.5 12.5 0 0 1 4.72 40.53L4.72 23.47A12.5 12.5 0 0 1 10.97 12.64Z" fill="url(#cl-logo-v)"/>
+  <path d="M25.75 4.11A12.5 12.5 0 0 1 38.25 4.11L53.03 12.64A12.5 12.5 0 0 1 59.28 23.47L59.28 40.53A12.5 12.5 0 0 1 53.03 51.36L38.25 59.89A12.5 12.5 0 0 1 25.75 59.89L10.97 51.36A12.5 12.5 0 0 1 4.72 40.53L4.72 23.47A12.5 12.5 0 0 1 10.97 12.64Z" fill="url(#cl-logo-sh)"/>
+  <path fill="#fff" filter="url(#cl-logo-cs)" transform="translate(6.99 4.43) scale(1.72)" d="M17.18,22.11c-1.54.42-3.11.56-4.65.18-1.87-.45-3-1.54-3.48-3.47-.39-1.48-.4-3.04.04-4.59.22-.78.62-1.52,1.11-2.2.9-1.15,2.13-2.07,3.48-2.39,1.11-.26,2.4-.02,3.19.71.61.56.94,1.2,1.08,1.91.18.8.09,1.54-.29,2.12-.69,1.07-1.27,1.18-1.85.96-.56-.22-.71-.68-.47-1.25.26-.5.23-1.29.06-1.73-.16-.38-.67-.77-1.25-.69-.99.13-1.74,1.08-2.25,1.76-.98,1.38-.97,2.82-.68,4.28.42,1.87,1.4,2.42,3.43,2.47.73.03,1.48-.07,2.21-.25,1.11-.29,1.95-.88,2.68-1.69.34-.38.92-.2,1.1.1.32.46.4,1.07-.12,1.74-.9,1.15-2.02,1.68-3.32,2.03Z"/>
+</svg>
