@@ -493,7 +493,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Họ tên Mẹ Chú Rể</label>
-                <input type="text" class="form-input" id="groom-mother" placeholder="VD: Bà : Nguyễn Thị Sơn" />
+                <input type="text" class="form-input" id="groom-mother" placeholder="VD: Bà : Nguyễn Thị Sợi" />
               </div>
             </div>
 
@@ -1172,7 +1172,7 @@
         "general": {
                 "pageTitle": "Vĩnh Hoàng💕Xoan Xoan",
                 "pageDesc": "Trân trọng kính mời quý khách đến dự lễ cưới của chúng tôi. Rất mong được đón tiếp quý khách!",
-                "coverThumb": "uploads/1794324127512-x21ut2.jpg",
+                "coverThumb": "uploads/cover-vinhhoang.jpg",
                 "musicUrl": "uploads/1794324139690-w282ac.mp3",
                 "autoScrollEnabled": true,
                 "autoScrollSpeed": 0.65
@@ -1188,7 +1188,7 @@
                 "QdE34AJsdR": "tức ngày 21/10/2026 âm lịch",
                 "6cOUdEMcWT": "Hôn nhân là chuyện cả đời<div>Yêu người vừa ý, cưới người mình thương</div>",
                 "URI0n_EdMI": "Nhà Trai",
-                "MH_6yyQPLw": "Ông : Nguyễn Vĩnh Sơn<div>Bà : Nguyễn Thị Sơn</div>",
+                "MH_6yyQPLw": "Ông : Nguyễn Vĩnh Sơn<div>Bà : Nguyễn Thị Sợi</div>",
                 "OmOohv4UUI": "Du Tràng, Đông Cứu<div>Bắc Ninh</div>",
                 "H7wR8HohuS": "Chú rể",
                 "WfJzkvPoSj": "Vĩnh Hoàng",
@@ -1228,7 +1228,7 @@
                 "bipfSExTi5": "Tiệc cưới của chúng mình sẽ thật sự trọn vẹn khi có bạn cùng sẻ chia niềm vui và chứng kiến khoảnh khắc đặc biệt này,<div>Sự hiện diện của bạn chính là niềm vinh hạnh và là món quà quý giá nhất dành cho chúng mình</div><div>Hẹn gặp bạn trong ngày trọng đại của chúng mình</div>"
         },
         "photos": {
-                "7WmUUnxK7X": "uploads/1794324127512-x21ut2.jpg",
+                "7WmUUnxK7X": "uploads/cover-vinhhoang.jpg",
                 "SWV1Oaou7d": "uploads/1794324026361-81cpfz.jpg",
                 "HpVta-7Cfo": "uploads/1794324033189-fhqzbl.jpg",
                 "1kEE_xfXqr": "uploads/1794324166754-q1mspc.jpg",
@@ -1721,7 +1721,7 @@
         if (!url || typeof url !== 'string') return '';
         let s = url.trim();
         if (s.includes('1794322198097-vgjikg.jpg')) {
-          s = 'uploads/1794324127512-x21ut2.jpg';
+          s = 'uploads/cover-vinhhoang.jpg';
         }
         if (s.startsWith('/uploads/')) {
           s = s.slice(1);
@@ -1937,8 +1937,9 @@
 
         pushLivePreview();
 
+        const getApiUrl = (p) => (window.location.protocol === 'file:' ? `http://localhost:8080${p}` : p);
         try {
-          const res = await fetch('/api/config', {
+          const res = await fetch(getApiUrl('/api/config'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(currentConfig)
@@ -2061,8 +2062,9 @@
           const reader = new FileReader();
           reader.onload = async () => {
             const dataUrl = reader.result;
+            const getApiUrl = (p) => (window.location.protocol === 'file:' ? `http://localhost:8080${p}` : p);
             try {
-              const res = await fetch('/api/upload', {
+              const res = await fetch(getApiUrl('/api/upload'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ filename: file.name, dataUrl })
@@ -2314,7 +2316,10 @@
           if (localStr) mergeConfig(JSON.parse(localStr));
         } catch (e) {}
 
-        for (const url of [`./site-config.json?t=${Date.now()}`, '/api/config']) {
+        const fetchUrls = window.location.protocol === 'file:'
+          ? [`http://localhost:8080/api/config?t=${Date.now()}`, `./site-config.json?t=${Date.now()}`]
+          : [`./site-config.json?t=${Date.now()}`, '/api/config'];
+        for (const url of fetchUrls) {
           try {
             const res = await fetch(url);
             if (res.ok) {
