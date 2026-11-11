@@ -133,6 +133,7 @@
   const cardEl = document.querySelector('.feedLayout_card__Nx6Wg');
   const rootContainer = document.getElementById('root-page-container');
   const canvasScaler = document.getElementById('canvas-scaler');
+  const appViewIndex = document.getElementById('app-view-index');
 
   function updateCardScale() {
     if (!rootContainer || !canvasScaler || !cardEl) return;
@@ -763,7 +764,6 @@
   }
 
   const toolbarToggleBtn = document.querySelector('.toolbar-toggle-button');
-  const appViewIndex = document.getElementById('app-view-index');
   if (toolbarToggleBtn && appViewIndex) {
     let lastToggleTime = 0;
     const handleToolbarToggle = (e) => {
