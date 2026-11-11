@@ -1396,14 +1396,10 @@
   // Load config on startup:
   // 1) Instant paint from localStorage (if edited locally in browser)
   // 2) Fetch ./site-config.json (works on GitHub Pages & static hosts!) or /api/config (local Node server)
-  // Clear legacy localStorage key that could hold broken '/uploads/...' paths on mobile browsers
   try {
-    localStorage.removeItem('cl_huy11_custom_config');
-    if (isLocalHost || isPreviewIframe) {
-      const localCfg = localStorage.getItem('cl_vinhhoang_config_v4');
-      if (localCfg) {
-        applyCustomConfig(JSON.parse(sanitizeLegacyNames(localCfg)));
-      }
+    const localCfg = localStorage.getItem('cl_vinhhoang_config_v4') || localStorage.getItem('cl_huy11_custom_config');
+    if (localCfg) {
+      applyCustomConfig(JSON.parse(sanitizeLegacyNames(localCfg)));
     }
   } catch (e) {}
 
@@ -1415,11 +1411,10 @@
           const cfg = await res.json();
           if (cfg && Object.keys(cfg).length > 0) {
             applyCustomConfig(cfg);
-            if (isLocalHost || isPreviewIframe) {
-              try {
-                localStorage.setItem('cl_vinhhoang_config_v4', JSON.stringify(cfg));
-              } catch (e) {}
-            }
+            try {
+              localStorage.setItem('cl_vinhhoang_config_v4', JSON.stringify(cfg));
+              localStorage.setItem('cl_huy11_custom_config', JSON.stringify(cfg));
+            } catch (e) {}
             return;
           }
         }
@@ -1449,9 +1444,9 @@
   });
 
   window.addEventListener('storage', (event) => {
-    if (event.key === 'cl_huy11_custom_config' && event.newValue) {
+    if ((event.key === 'cl_vinhhoang_config_v4' || event.key === 'cl_huy11_custom_config') && event.newValue) {
       try {
-        applyCustomConfig(JSON.parse(event.newValue));
+        applyCustomConfig(JSON.parse(sanitizeLegacyNames(event.newValue)));
       } catch (e) {}
     } else if (event.key === 'cl_huy11_wishes') {
       loadWishesFromStorage();

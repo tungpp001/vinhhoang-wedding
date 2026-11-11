@@ -1931,6 +1931,7 @@
       async function saveAllConfig(silent = false) {
         collectConfigFromForm();
         try {
+          localStorage.setItem('cl_vinhhoang_config_v4', JSON.stringify(currentConfig));
           localStorage.setItem('cl_huy11_custom_config', JSON.stringify(currentConfig));
         } catch (e) {}
 
@@ -2309,7 +2310,7 @@
         }
 
         try {
-          const localStr = localStorage.getItem('cl_huy11_custom_config');
+          const localStr = localStorage.getItem('cl_vinhhoang_config_v4') || localStorage.getItem('cl_huy11_custom_config');
           if (localStr) mergeConfig(JSON.parse(localStr));
         } catch (e) {}
 
@@ -2328,6 +2329,7 @@
 
         populateFormFromConfig();
         try {
+          localStorage.setItem('cl_vinhhoang_config_v4', JSON.stringify(currentConfig));
           localStorage.setItem('cl_huy11_custom_config', JSON.stringify(currentConfig));
         } catch (e) {}
         renderRsvpTable();
