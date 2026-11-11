@@ -573,3 +573,100 @@
   pointer-events: none;
   white-space: nowrap;
 }
+
+/* ==========================================================================
+   MOBILE SCROLL FIX & BULLETPROOF COMMENT TOGGLE
+   ========================================================================== */
+
+/* Universal Comment & Toolbar Hide Rules */
+.hide-toolbar #cinelove-toolbar,
+#app-view-index.hide-toolbar #cinelove-toolbar,
+.feedLayout_feed__jIIvL #app-view-index.hide-toolbar #cinelove-toolbar,
+.feedLayout_feed__jIIvL.feedLayout_feed__jIIvL #app-view-index.hide-toolbar #cinelove-toolbar,
+body.hide-toolbar #cinelove-toolbar,
+.hide-toolbar #blessing-box,
+#app-view-index.hide-toolbar #blessing-box,
+.feedLayout_feed__jIIvL #app-view-index.hide-toolbar #blessing-box,
+.feedLayout_feed__jIIvL.feedLayout_feed__jIIvL #app-view-index.hide-toolbar #blessing-box,
+body.hide-toolbar #blessing-box,
+.hide-toolbar .received-gifts-wrapper,
+#app-view-index.hide-toolbar .received-gifts-wrapper,
+.hide-toolbar #cinelove-animation-box,
+#app-view-index.hide-toolbar #cinelove-animation-box {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#app-view-index.hide-toolbar .toolbar-toggle-button,
+body.hide-toolbar .toolbar-toggle-button {
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px)) !important;
+  height: 40px !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .toolbar-toggle-pill,
+body.hide-toolbar .toolbar-toggle-button .toolbar-toggle-pill {
+  height: 40px !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .thumbnail,
+body.hide-toolbar .toolbar-toggle-button .thumbnail {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateX(-50%) scale(0.4) !important;
+}
+#app-view-index.hide-toolbar .toolbar-toggle-button .icon-svg,
+body.hide-toolbar .toolbar-toggle-button .icon-svg {
+  transform: translateX(-50%) rotate(45deg) !important;
+}
+
+/* Mobile Scrolling Container Setup & Swipeable Elements */
+@media (max-width: 768px) {
+  html,
+  body {
+    width: 100vw !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .guest-ui_nestedLoading___AAHA,
+  .guest-ui_spinContainer__fVctq,
+  .feedLayout_feed__jIIvL,
+  .feedLayout_stage__zQjhY,
+  .feedLayout_cardRow__36Grw,
+  .feedLayout_card__Nx6Wg,
+  #app-view-index {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  [data-autoscroll-root] {
+    width: 100vw !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+  }
+
+  /* Make sure every element inside the invitation card allows touch scrolling */
+  #canvas-scaler,
+  #root-page-container,
+  .photo-component,
+  .photo-bg-wrap,
+  [data-node-id] {
+    touch-action: pan-y !important;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}

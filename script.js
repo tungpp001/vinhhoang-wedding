@@ -471,11 +471,19 @@
   const blessingBox = document.getElementById('blessing-box');
   function renderBlessingBox() {
     if (!blessingBox) return;
-    if (wishes.length === 0) {
-      blessingBox.style.opacity = '0';
+    if (
+      wishes.length === 0 ||
+      (appViewIndex && appViewIndex.classList.contains('hide-toolbar')) ||
+      document.body.classList.contains('hide-toolbar')
+    ) {
+      blessingBox.style.setProperty('display', 'none', 'important');
+      blessingBox.style.setProperty('opacity', '0', 'important');
+      blessingBox.style.setProperty('visibility', 'hidden', 'important');
       return;
     }
-    blessingBox.style.opacity = '1';
+    blessingBox.style.setProperty('display', 'flex', 'important');
+    blessingBox.style.setProperty('opacity', '1', 'important');
+    blessingBox.style.setProperty('visibility', 'visible', 'important');
     const itemsHtml = wishes
       .map(
         (w) => `
@@ -759,18 +767,43 @@
   if (toolbarToggleBtn && appViewIndex) {
     let lastToggleTime = 0;
     const handleToolbarToggle = (e) => {
-      e.stopPropagation();
+      if (e) {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+      }
       const now = Date.now();
-      if (now - lastToggleTime < 250) return;
+      if (now - lastToggleTime < 400) return;
       lastToggleTime = now;
+
       const isHidden = appViewIndex.classList.toggle('hide-toolbar');
+      document.body.classList.toggle('hide-toolbar', isHidden);
+
+      if (blessingBox) {
+        blessingBox.style.setProperty('display', isHidden ? 'none' : 'flex', 'important');
+        blessingBox.style.setProperty('opacity', isHidden ? '0' : '1', 'important');
+        blessingBox.style.setProperty('visibility', isHidden ? 'hidden' : 'visible', 'important');
+        blessingBox.style.setProperty('pointer-events', isHidden ? 'none' : 'auto', 'important');
+      }
+      const toolbarEl = document.getElementById('cinelove-toolbar');
+      if (toolbarEl) {
+        toolbarEl.style.setProperty('display', isHidden ? 'none' : 'block', 'important');
+        toolbarEl.style.setProperty('visibility', isHidden ? 'hidden' : 'visible', 'important');
+        toolbarEl.style.setProperty('pointer-events', isHidden ? 'none' : 'auto', 'important');
+      }
+      const giftsWrap = document.querySelector('.received-gifts-wrapper');
+      if (giftsWrap) {
+        giftsWrap.style.setProperty('display', isHidden ? 'none' : '', 'important');
+      }
+      const animBox = document.getElementById('cinelove-animation-box');
+      if (animBox) {
+        animBox.style.setProperty('display', isHidden ? 'none' : '', 'important');
+      }
+
       showToast(isHidden ? 'Đã ẩn bình luận & thanh công cụ' : 'Đã bật bình luận');
     };
+
     toolbarToggleBtn.addEventListener('click', handleToolbarToggle);
-    toolbarToggleBtn.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      handleToolbarToggle(e);
-    }, { passive: false });
+    toolbarToggleBtn.addEventListener('touchend', handleToolbarToggle, { passive: false });
   }
 
   // --- 10. HỘP QUÀ MỪNG (WOBBLING HEART BOX) & COPY STK ---
