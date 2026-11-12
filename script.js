@@ -42,33 +42,7 @@
     autoScrollSpeed: 0.65,
     initialLikes: 18,
     avatarColors: ['#f9d5dc', '#fde2c8', '#d8ecd9', '#d6e6f7', '#e5dcf5', '#f6e3b4'],
-    defaultWishes: [
-      {
-        senderName: 'Minh Tuấn & Ngọc Lan',
-        content: 'Chúc Vĩnh Hoàng và Xoan Xoan trăm năm hạnh phúc, mãi mãi yêu thương nhau như ngày đầu nhé! 💕',
-        createdAt: new Date(Date.now() - 1000 * 60 * 18).toISOString()
-      },
-      {
-        senderName: 'Thu Hà',
-        content: 'Cô dâu xinh quá! Chúc hai bạn có một đám cưới thật trọn vẹn và sớm đón thiên thần nhỏ nha 🥰',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString()
-      },
-      {
-        senderName: 'Hội bạn cấp 3 Bắc Ninh',
-        content: 'Chúc mừng hạnh phúc đôi trẻ! Ngày vui nhất định bọn mình sẽ có mặt đông đủ quậy tới bến 🎉🥂',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 14).toISOString()
-      },
-      {
-        senderName: 'Gia đình chú Hùng',
-        content: 'Chúc hai cháu trăm năm tình viên mãn, bạc đầu nghĩa phu thê, gia đình ấm êm hạnh phúc!',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 28).toISOString()
-      },
-      {
-        senderName: 'Hoàng Nam',
-        content: 'Happy Wedding Vĩnh Hoàng & Xoan Xoan! Chúc hai bạn luôn tràn ngập tiếng cười ❤️',
-        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 50).toISOString()
-      }
-    ]
+    defaultWishes: []
   };
 
   // Record original top positions of all top-level nodes inside #canvas-scaler so we can shift nodes below album cleanly
@@ -368,10 +342,11 @@
 
   function loadWishesFromStorage() {
     try {
-      const saved = localStorage.getItem('cl_huy11_wishes');
+      localStorage.removeItem('cl_huy11_wishes');
+      const saved = localStorage.getItem('cl_vinhhoang_wishes_v2');
       if (saved) {
         const cleaned = sanitizeLegacyNames(saved);
-        if (cleaned !== saved) localStorage.setItem('cl_huy11_wishes', cleaned);
+        if (cleaned !== saved) localStorage.setItem('cl_vinhhoang_wishes_v2', cleaned);
         wishes = JSON.parse(cleaned);
       } else {
         wishes = [...CONFIG.defaultWishes];
@@ -384,7 +359,7 @@
 
   function saveWishes() {
     try {
-      localStorage.setItem('cl_huy11_wishes', JSON.stringify(wishes));
+      localStorage.setItem('cl_vinhhoang_wishes_v2', JSON.stringify(wishes));
     } catch (e) {}
   }
 
@@ -1448,7 +1423,7 @@
       try {
         applyCustomConfig(JSON.parse(sanitizeLegacyNames(event.newValue)));
       } catch (e) {}
-    } else if (event.key === 'cl_huy11_wishes') {
+    } else if (event.key === 'cl_vinhhoang_wishes_v2') {
       loadWishesFromStorage();
       renderRightPanel();
       renderBlessingBox();
