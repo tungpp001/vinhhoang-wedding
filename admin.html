@@ -2224,24 +2224,21 @@
 
       function getWishesList() {
         try {
-          const s = localStorage.getItem('cl_huy11_wishes');
+          localStorage.removeItem('cl_huy11_wishes');
+          const s = localStorage.getItem('cl_vinhhoang_wishes_v2');
           if (s) {
             const cleaned = s
               .replace(/Đức\s*Huy|Đức\s*Huy/gi, 'Vĩnh Hoàng')
               .replace(/Nguyễn\s*Hường|Nguyễn\s*Hường/gi, 'Xoan Xoan');
-            if (cleaned !== s) localStorage.setItem('cl_huy11_wishes', cleaned);
+            if (cleaned !== s) localStorage.setItem('cl_vinhhoang_wishes_v2', cleaned);
             return JSON.parse(cleaned);
           }
         } catch (e) {}
-        return [
-          { senderName: 'Minh Tuấn & Ngọc Lan', content: 'Chúc Vĩnh Hoàng và Xoan Xoan trăm năm hạnh phúc, mãi mãi yêu thương nhau như ngày đầu nhé! 💕', createdAt: new Date().toISOString() },
-          { senderName: 'Thu Hà', content: 'Cô dâu xinh quá! Chúc hai bạn có một đám cưới thật trọn vẹn và sớm đón thiên thần nhỏ nha 🥰', createdAt: new Date().toISOString() },
-          { senderName: 'Hội bạn cấp 3 Bắc Ninh', content: 'Chúc mừng hạnh phúc đôi trẻ! Ngày vui nhất định bọn mình sẽ có mặt đông đủ quậy tới bến 🎉🥂', createdAt: new Date().toISOString() }
-        ];
+        return [];
       }
 
       function saveWishesList(list) {
-        localStorage.setItem('cl_huy11_wishes', JSON.stringify(list));
+        localStorage.setItem('cl_vinhhoang_wishes_v2', JSON.stringify(list));
         if (previewIframe && previewIframe.contentWindow) {
           previewIframe.contentWindow.postMessage({ type: 'CL_RELOAD_WISHES' }, '*');
         }
